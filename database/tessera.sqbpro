@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="/Users/logan.kemprowski/Documents/tessera/database/tessera.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1176"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,6:mainEvents"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1">CREATE TABLE IF NOT EXISTS Events (
+    event_id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    date DATE,
+    time TIME,
+    location TEXT
+);
+CREATE TABLE IF NOT EXISTS Users (
+    user_id INTEGER PRIMARY KEY,
+    username TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE
+);
+CREATE TABLE IF NOT EXISTS Tickets (
+    ticket_id INTEGER PRIMARY KEY,
+    event_id INTEGER,
+    user_id INTEGER,
+    purchase_date DATE,
+    price REAL,
+    FOREIGN KEY (event_id) REFERENCES Events(event_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
+INSERT INTO Events (name, description, date, time, location) VALUES ('Talha Academy Graduation', 'Talha Academy', '2024-08-23', '1:30', 'Reston Office');
+INSERT INTO Events (name, description, date, time, location) VALUES ('Capitals Game', 'Ice Hockey', '2024-12-15', '8:00', 'Capital One Arena');
+INSERT INTO Events (name, description, date, time, location) VALUES ('Dog Show', 'You look at dogs', '2025-01-20', '10:00', 'A dog park');
+INSERT INTO Events (name, description, date, time, location) VALUES ('Conan Gray', 'Concert', '2025-01-23', '9:00', 'A Stadium');
+INSERT INTO Events (name, description, date, time, location) VALUES ('Jurrasic Park', 'Movie Rerun', '2024-06-30', '3:00', 'Movie Theater');
+INSERT INTO Events (name, description, date, time, location) VALUES ('Hadestown', 'Broadway Show', '2025-05-18', '8:00', 'New York City');
+</sql><current_tab id="0"/></tab_sql></sqlb_project>

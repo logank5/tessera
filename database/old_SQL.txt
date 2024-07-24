@@ -1,0 +1,83 @@
+CREATE TABLE IF NOT EXISTS Events (
+    event_id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    date DATE,
+    time TIME,
+    location TEXT
+);
+CREATE TABLE IF NOT EXISTS Users (
+    user_id INTEGER PRIMARY KEY,
+    username TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE
+);
+CREATE TABLE IF NOT EXISTS Tickets (
+    ticket_id INTEGER PRIMARY KEY,
+    event_id INTEGER,
+    user_id INTEGER,
+    purchase_date DATE,
+    price REAL,
+    FOREIGN KEY (event_id) REFERENCES Events(event_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
+INSERT INTO Events (name, description, date, time, location) VALUES ('SQLite4 Announcement Party', 'Because 3 versions is not enough.', '2025-04-20', '10:00', 'SQL Arena');
+INSERT INTO Events (name, description, date, time, location) VALUES ('Talha Academy Graduation', 'Talha Academy', '2024-08-23', '1:30', 'Reston Office');
+INSERT INTO Events (name, description, date, time, location) VALUES ('Capitals Game', 'Ice Hockey', '2024-12-15', '8:00', 'Capital One Arena');
+INSERT INTO Events (name, description, date, time, location) VALUES ('Dog Show', 'You look at dogs', '2025-01-20', '10:00', 'A dog park');
+INSERT INTO Events (name, description, date, time, location) VALUES ('A Concert', 'It has an artist', '2025-01-23', '9:00', 'A Stadium');
+INSERT INTO Events (name, description, date, time, location) VALUES ('Movie', 'A movie?', '2024-06-30', '3:00', 'Movie Theater');
+INSERT INTO Events (name, description, date, time, location) VALUES ('Hadestown', 'Broadway Show', '2025-05-18', '8:00', 'Broadway');
+
+INSERT INTO Users (username, password_hash, email) VALUES ('logan.kemprowski', '12345', 'logan@logan.com');
+INSERT INTO Users (username, password_hash, email) VALUES ('ethan.kemprowski', '53241', 'ethan@ethan.com');
+INSERT INTO Users (username, password_hash, email) VALUES ('kitty.shi', '87012', 'kitty@kitty.com');
+INSERT INTO Users (username, password_hash, email) VALUES ('nithika.ramanathan', '11784', 'nithika@nithika.com');
+INSERT INTO Users (username, password_hash, email) VALUES ('talha.muhammad', '86382', 'talha@talha.com');
+
+INSERT INTO Tickets (event_id, user_id, purchase_date, price) VALUES (1, 5, '2024-09-24',25);
+INSERT INTO Tickets (event_id, user_id, purchase_date, price) VALUES (2, 5,'2024-06-10',10000);
+INSERT INTO Tickets (event_id, user_id, purchase_date, price) VALUES (2, 1,'2024-06-10',10000);
+INSERT INTO Tickets (event_id, user_id, purchase_date, price) VALUES (2, 2,'2024-06-10',10000);
+INSERT INTO Tickets (event_id, user_id, purchase_date, price) VALUES (2, 3,'2024-06-10',10000);
+INSERT INTO Tickets (event_id, user_id, purchase_date, price) VALUES (2, 4,'2024-06-10',10000);
+INSERT INTO Tickets (event_id, user_id, purchase_date, price) VALUES (3, 1, '2024-09-24',50);
+INSERT INTO Tickets (event_id, user_id, purchase_date, price) VALUES (3, 2, '2024-09-24',50);
+INSERT INTO Tickets (event_id, user_id, purchase_date, price) VALUES (4, 3, '2024-09-24',10);
+INSERT INTO Tickets (event_id, user_id, purchase_date, price) VALUES (5, 1, '2024-09-15',30);
+INSERT INTO Tickets (event_id, user_id, purchase_date, price) VALUES (6, 1, '2024-09-15',20);
+INSERT INTO Tickets (event_id, user_id, purchase_date, price) VALUES (7, 1, '2024-11-17',275);
+INSERT INTO Tickets (event_id, user_id, purchase_date, price) VALUES (7, 2, '2024-11-17',275);
+
+
+
+/**
+Homework 1
+**/
+SELECT * FROM Tickets WHERE user_id=5;
+
+/**
+Homework 2
+**/
+SELECT * FROM Events WHERE (date BETWEEN '2024-01-01' AND '2024-12-25');
+
+/**
+Homework 3
+**/
+SELECT * FROM Tickets WHERE price > 100;
+SELECT Users.username FROM Users JOIN Tickets WHERE price>100;
+
+/**
+Homework 4
+**/
+SELECT Users.username, COUNT(Tickets.user_id) AS numTickets FROM Users  INNER JOIN Tickets ON Users.user_id=Tickets.user_id GROUP BY Users.username ORDER BY COUNT(Tickets.user_id) DESC;
+
+/**
+Homework 5
+**/
+SELECT DISTINCT Users.username, SUM(Tickets.price) AS TotalPrice FROM Users INNER JOIN Tickets ON Users.user_id=Tickets.user_id GROUP BY Users.username ORDER BY COUNT(Tickets.user_id) DESC;
+
+SELECT * FROM Events;
+SELECT * FROM Users;
+SELECT * FROM Tickets;
