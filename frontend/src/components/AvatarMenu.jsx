@@ -33,15 +33,13 @@ function AvatarMenu({ firstname, lastname, email, avatar, username }) {
     return(
         <Menu>
           
-          <MenuButton alignItems='center' p='5px'>
-            <Center>
+          <MenuButton alignItems='center' >
             {/* <FaUserCircle size='40px'/> */}
 
               <Avatar
                 src={avatar}>
               </Avatar>
 
-            </Center>
 
           </MenuButton>
           <MenuList colorScheme='blue' color={bg}>
