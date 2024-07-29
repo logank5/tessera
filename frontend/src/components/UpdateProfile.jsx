@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, VStack, Text, Center, useColorModeValue,
-    Spacer, Divider, Button, Heading
+    Spacer, Divider, Button, Heading, Card
  } from '@chakra-ui/react';
 import {InputGroup, Input, InputRightElement} from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
@@ -47,8 +47,8 @@ function UpdateProfile({ id, firstname, lastname, username, email, avatar }) {
     return(
         <Box height='80vh'>
             <Center>
-                <Box rounded='5px' boxShadow={'5px'} width='50%' bg={color} p='20px' height='80vh'>
-                    <VStack p='20px'>
+                <Card rounded='5px' boxShadow={'5px'} width='45%' mt='50px' bg={color} height='58vh'>
+                    <VStack p='30px'>
                         <Heading>
                             Update Account Details
                         </Heading>
@@ -86,11 +86,12 @@ function UpdateProfile({ id, firstname, lastname, username, email, avatar }) {
                         </InputGroup>
                         <Spacer p='30px'/>
                         <Divider/>
-                        <Button onClick={handleClick} type='submit'>
+                        <Spacer p='10px'/>
+                        <Button onClick={handleClick} bg={bg} color={color} type='submit'>
                             Save Changes
                         </Button>
                     </VStack>
-                </Box>
+                </Card>
             </Center>
         </Box>
     );

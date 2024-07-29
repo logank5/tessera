@@ -4,6 +4,8 @@ import {Button, useColorMode, Link, Center, Box, Stack, useColorModeValue, GridI
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import { MdMail } from "react-icons/md";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
+
 
 
 function Register(){
@@ -26,7 +28,9 @@ function Register(){
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [confirm, setConfirm] = useState('');
+    const [confirm_password, setConfirm] = useState('');
+
+    const navigate = useNavigate();
 
     function handleClick() {
         fetch(`http://localhost:5000/user`, {
@@ -41,12 +45,16 @@ function Register(){
                     password: password,
                     firstname: firstname,
                     lastname: lastname,
+                    confirm_password: confirm_password,
                 }
             ),
             credentials: 'same-origin'
         })
-        .then(response => response.json())
-        .then()
+        .then( response => {
+            if (response.status === 200)
+                {navigate(`/events`)}
+          })
+          
         .catch(error => console.error('User Creation Unsuccessful:', error));
 
     }
@@ -96,10 +104,6 @@ function Register(){
                                     <HStack>
                                         <FormControl>
                                             <InputGroup>
-                                                <InputLeftElement
-                                                    pointerEvents="none"
-                                                    children={<CFaUserAlt color={bg} />}
-                                                />
                                                 <Input type="text" 
                                                 value={firstname} 
                                                 onChange={e => setFirstname(e.target.value)} 
@@ -109,10 +113,6 @@ function Register(){
                                         <Spacer></Spacer>
                                         <FormControl>
                                             <InputGroup>
-                                                <InputLeftElement
-                                                    pointerEvents="none"
-                                                    children={<CFaUserAlt color={bg} />}
-                                                />
                                                 <Input type="text" 
                                                 value={lastname} 
                                                 onChange={e => setLastname(e.target.value)} 
@@ -156,6 +156,21 @@ function Register(){
                                                 placeholder="Password"
                                                 color={bg}
                                                 value={password} onChange={e => setPassword(e.target.value)}
+                                            />
+                                        </InputGroup>
+                                    </FormControl>
+                                    <FormControl>
+                                        <InputGroup>
+                                            <InputLeftElement
+                                                pointerEvents="none"
+                                                color={bg}
+                                                children={<CFaLock color={bg} />}
+                                            />
+                                            <Input
+                                                type={showPassword ? "text" : "password"}
+                                                placeholder="Confirm Password"
+                                                color={bg}
+                                                value={confirm_password} onChange={e => setConfirm(e.target.value)}
                                             />
                                             <InputRightElement width="4.5rem">
                                                 <Button h="1.75rem" size="sm" onClick={handleShowClick}>

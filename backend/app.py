@@ -163,10 +163,11 @@ def create_user():
     password = request.json.get('password')
     firstname = request.json.get('firstname')
     lastname = request.json.get('lastname')
+    confirm_password = request.json.get('confirm_password')
 
     # Basic validation to ensure all fields are provided
-    if not email or not username or not password or not firstname or not lastname:
-        return jsonify({'error': 'All fields (email, username, firstname, lastname, and password) are required.'}), 400
+    if not email or not username or not password or not firstname or not lastname or not confirm_password:
+        return jsonify({'error': 'All fields (email, username, firstname, lastname, password, and confirm_password) are required.'}), 400
     
     if '@' in username:
         return jsonify({'error':'Invalid username. Username cannot contain "@"'}), 400
@@ -179,6 +180,9 @@ def create_user():
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
+        if password != confirm_password:
+            return jsonify({'message': 'Passwords do not match'}), 404
+        
         cursor.execute('INSERT INTO Users (email, username, password_hash, firstname, lastname) VALUES (?, ?, ?, ?, ?)',
                     (email, username, hashed_password, firstname, lastname))
         conn.commit()  # Commit the changes to the database
@@ -189,7 +193,7 @@ def create_user():
 
         conn.close()
 
-        return jsonify({'message': 'User created successfully', 'user_id': new_user_id['user_id']}), 201
+        return jsonify({'message': 'User created successfully', 'user_id': new_user_id['user_id']}), 200
 
     except sqlite3.IntegrityError:
         return jsonify({'error': 'Username or email already exists.'}), 409
@@ -419,32 +423,35 @@ def forgot_password():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/user/password', methods=['PUT'])
-def change_password():
+@app.route('/user/password/<user_id>', methods=['PUT'])
+def change_password(user_id):
     # Extract email, username, and password from the JSON payload
-    username = request.json.get('username')
+    confirm_password = request.json.get('confirm_password')
     old_password = request.json.get('old_password')
-    password = request.json.get('password')
+    new_password = request.json.get('new_password')
     
     # Basic validation to ensure all fields are provided
-    if not username or not password or not old_password:
-        return jsonify({'error': 'A field (username, old_password, password) is required.'}), 400
+    if not confirm_password or not new_password or not old_password:
+        return jsonify({'error': 'A field (confirm_password, old_password, new_password) is required.'}), 400
 
-    new_hashed = generate_password_hash(password)
+    new_hashed = generate_password_hash(new_password)
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
 
         # Retrieve the user_id of the newly created user to confirm creation
-        cursor.execute('SELECT password_hash FROM Users WHERE username = ?', (username,))
+        cursor.execute('SELECT password_hash FROM Users WHERE user_id = ?', (user_id,))
         password_hash = cursor.fetchone()
       
         if password_hash != None:
           if check_password_hash(password_hash['password_hash'], old_password):
-            cursor.execute('UPDATE Users SET password_hash = ? WHERE username = ?', (new_hashed,username,))
-            conn.commit()  # Commit the changes to the database
-            conn.close()
-            return jsonify({'message': 'Password updated successfully'}), 201
+            if new_password == confirm_password:
+                cursor.execute('UPDATE Users SET password_hash = ? WHERE user_id = ?', (new_hashed,user_id,))
+                conn.commit()  # Commit the changes to the database
+                conn.close()
+                return jsonify({'message': 'Password updated successfully'}), 200
+            else:
+                return jsonify({'message': 'Passwords do not match'}), 401
           else:
             return jsonify({'message': 'Password change failed: Incorrect password'}), 404
         
@@ -582,17 +589,6 @@ def get_user_details():
     detail_list = [dict(detail) for detail in details]
     
     conn.close()
-
-    # current_user = get_jwt_identity()
-    # return jsonify(logged_in_as=current_user), 200
-
-    
-
-    # if get_jwt_identity():
-    #     return jsonify(detail_list) 
-
-    # else:
-    #     return jsonify({'Not Logged in'}), 500
 
     return jsonify(detail_list)
 

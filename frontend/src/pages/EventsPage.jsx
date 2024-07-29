@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { SimpleGrid, Container } from '@chakra-ui/react';
 import EventCard from '../components/EventCard';
-import Sidebar from '../components/Sidebar';
+import Filter from '../components/Filter';
 import {
   Drawer,
   DrawerBody,
@@ -56,7 +56,7 @@ function EventsPage() {
   return (
     <>
       {/* Add the sidebar with filter */}
-      <Sidebar sendDataToParent={handleDataFilter}/>
+      <Filter sendDataToParent={handleDataFilter}/>
 
       {/* Add all the event cards */}
       <Container maxW="container.xl" centerContent>

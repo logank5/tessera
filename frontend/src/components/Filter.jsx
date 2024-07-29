@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Center ,Flex, Divider, VStack, InputRightElement, InputGroup, Image } from '@chakra-ui/react';
-import EventCard from '../components/EventCard';
+import EventCard from './EventCard';
 import {
   Drawer,
   DrawerBody,
@@ -31,7 +31,7 @@ import { FaSearch } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { GrClear } from "react-icons/gr";
 
-function Sidebar({sendDataToParent}) {
+function Filter({sendDataToParent}) {
 
     //Contants
     const bg = useColorModeValue('blue.500', 'blue.400')
@@ -67,7 +67,7 @@ function Sidebar({sendDataToParent}) {
                     <h2>
                         {/* Button for opening the accordian */}
                         <AccordionButton>
-                            <Box as='span' flex='1' textAlign='left' fontSize="l">
+                            <Box as='span' flex='1' textAlign='left' fontSize="l" fontWeight='bold'>
                                 Filter Events
                             </Box>
                             <AccordionIcon />
@@ -199,4 +199,4 @@ function Sidebar({sendDataToParent}) {
     )
 }
 
-export default Sidebar;
+export default Filter;

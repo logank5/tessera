@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import {TabList, Tabs, Tab, TabPanels, TabPanel} from '@chakra-ui/react'
 import ProfileInfo from './ProfileInfo';
 import UpdateProfile from './UpdateProfile';
+import ChangePassword from './ChangePassword';
 
 function Accounts() {
   const [users, setUsers] = useState([]);
@@ -14,11 +15,10 @@ function Accounts() {
   useEffect(() => {
     fetch(`http://localhost:5000/user/logged`, {
         credentials: 'include'
-      
     })
         .then(response => response.json())
         .then(setUsers)
-        .catch(error => console.error('Error fetching events:', error));
+        .catch(error => console.error('Error fetching user:', error));
   }, []);
   
   return (
@@ -29,16 +29,19 @@ function Accounts() {
                 backgroundSize='cover'
                 height='100vh'
                 p='20px'>
-            <Tabs isFitted variant='enclosed' mt='80px' ml='20px' mr='20px'>
+            <Tabs variant='enclosed' mt='80px' ml='20px' mr='20px'>
                 <TabList>
-                    <Tab _selected={{bg:color, color:flip}} color='white'>
+                    <Tab _selected={{bg:color, color:flip}} color='white' fontWeight='bold'>
                         Profile Details
                     </Tab>
-                    <Tab _selected={{bg:color, color:flip}} color='white'>
-                        Update Info
+                    <Tab _selected={{bg:color, color:flip}} color='white' fontWeight='bold'>
+                        Update User Information
                     </Tab>
-                    <Tab _selected={{bg:color, color:flip}} color='white'>
-                        Purchase History
+                    <Tab _selected={{bg:color, color:flip}} color='white' fontWeight='bold'>
+                        Change Password
+                    </Tab>
+                    <Tab _selected={{bg:color, color:flip}} color='white' fontWeight='bold'>
+                        Payment Details
                     </Tab>
                 </TabList>
 
@@ -52,6 +55,7 @@ function Accounts() {
                             username={user.username}
                             email={user.email}
                             avatar={user.avatar} 
+                            phone={user.phone} 
                             />
                         ))}
                     </TabPanel>
@@ -68,12 +72,21 @@ function Accounts() {
                     </TabPanel>
 
                     <TabPanel>
-                        <p>three!</p>
+                        {users.map(user => (
+                            <ChangePassword
+                                key={user.user_id}
+                                id={user.user_id}
+                                username={user.username}
+                            />
+                        ))}
                     </TabPanel>
+
+                    <TabPanel>
+                        <p>Payment</p>
+                    </TabPanel>
+
                 </TabPanels>
             </Tabs>
-        
-        {/* <Text>{users[0].avatar}</Text> */}
         </Box>
     </>
     

@@ -1,32 +1,47 @@
 import React from 'react';
-import {Stack, Box, Flex, Text, Button, Spacer, DarkMode, Avatar, useColorModeValue, useColorMode} from '@chakra-ui/react';
+import {Stack, Box, Flex, Text, Avatar, Spacer, Center, useColorModeValue, useColorMode} from '@chakra-ui/react';
 import {Image, BreadcrumbItem, BreadcrumbLink} from '@chakra-ui/react';
 import {Menu, MenuButton, MenuList, MenuGroup, MenuItem, MenuDivider, MenuOptionGroup, MenuItemOption} from '@chakra-ui/react';
 import ColorModeSwitch from "./ColorModeSwitch";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import tesseralogo from '../assets/tesseralogo.png';
 import tesseralogo2 from '../assets/tesseralogo2.png';
+import { FaUserCircle } from "react-icons/fa";
+import AvatarMenu from './AvatarMenu';
 
 function Navbar() {
     const bg = useColorModeValue('blue.500', 'blue.400')
     const color = useColorModeValue('white', 'gray.800')
     const { colorMode, toggleColorMode } = useColorMode();
     const [users, setUsers] = useState([]);
+    const [loggedIn, setLoggedIn] = useState(false);
     
+    const navigate = useNavigate();
     
-    const handleChange = (event) => {
-        filter = value;
-      };
-
-  
     useEffect(() => {
       fetch(`http://localhost:5000/user/logged`, {
         credentials: 'include'
       })
-  
         .then(response => response.json())
-        .then(setUsers)
+        .then(data => setUsers(data))
+        
+        .catch(error => console.error('Error fetching events:', error));
+    }, []);
+
+    useEffect(() => {
+      fetch(`http://localhost:5000/user/logged`, {
+        credentials: 'include'
+      })
+        .then(response => {
+          if (response.status === 200) {
+              setLoggedIn(true)
+            }
+            else {
+              setLoggedIn(false)
+            }
+        })
+        
         .catch(error => console.error('Error fetching events:', error));
     }, []);
 
@@ -48,24 +63,21 @@ function Navbar() {
           <ColorModeSwitch/>
         </Box>
         <Box>
-        <Menu>
-          <MenuButton>
-              <Avatar 
-              // src={users[0].avatar}
+          {loggedIn == true ? users.map(user => (
+              <AvatarMenu
+                key={user.user_id}
+                user_id={user.user_id}
+                firstname={user.firstname}
+                lastname={user.lastname}
+                username={user.username}
+                // loggedIn={loggedIn}
+                email={user.email}
+                avatar={user.avatar} 
+                phone={user.phone} 
               />
-          </MenuButton>
-          <MenuList colorScheme='blue' color={bg}>
-            <MenuGroup title='My Profile'>
-              <MenuItem as={Link} to={`/account`}>My Account</MenuItem>
-              <MenuItem as={Link} to={`/tickets`}>My Tickets</MenuItem>
-            </MenuGroup>
-            <MenuDivider />
-            <MenuItem as={Link} to={`/login`}>Login</MenuItem>
-            <MenuItem color='red.500'>
-              <Link color='red.500'>Logout</Link>
-            </MenuItem>
-          </MenuList>
-        </Menu>
+          )) : <AvatarMenu/>}
+            
+
         </Box>
       </Flex>
     </Stack>

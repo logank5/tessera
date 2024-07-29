@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Box, VStack, Text, Heading, Avatar, Center, useColorModeValue,
-    Spacer, Divider, Link
+    Spacer, Divider, Link, Card
  } from '@chakra-ui/react';
 import {Table, TableContainer, Tr, Td, Tbody} from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
-function ProfileInfo({ id, firstname, lastname, username, email, avatar }) {
+function ProfileInfo({ firstname, lastname, username, email, avatar, phone }) {
     const bg = useColorModeValue('blue.500', 'blue.400')
     const color = useColorModeValue('white', 'gray.800')
     const flip = useColorModeValue('gray.800', 'white')
@@ -32,10 +32,10 @@ function ProfileInfo({ id, firstname, lastname, username, email, avatar }) {
         <Box 
             >
             <Center height='60vh'>
-                <Box rounded='5px' boxShadow={'5px'} width='30%' bg={color} p='20px'>
+                <Card rounded='5px' boxShadow={'5px'} width='30%' bg={color} p='20px'>
                     <VStack>
                         <Heading>
-                            Account Details
+                            {firstname} {lastname}
                         </Heading>
                         <Spacer/>
                         <Avatar size='lg' src={avatar}/>
@@ -46,16 +46,20 @@ function ProfileInfo({ id, firstname, lastname, username, email, avatar }) {
                             <Table variant='unstyled' color={flip}>
                                 <Tbody>
                                     <Tr>
-                                        <Td>Name</Td>
+                                        <Td fontWeight='semibold'>Full Name:</Td>
                                         <Td>{firstname} {lastname}</Td>
                                     </Tr>
                                     <Tr>
-                                        <Td>Username</Td>
+                                        <Td fontWeight='semibold'>Username:</Td>
                                         <Td>{username}</Td>
                                     </Tr>
                                     <Tr>
-                                        <Td>Email</Td>
+                                        <Td fontWeight='semibold'>Email:</Td>
                                         <Td>{email}</Td>
+                                    </Tr>
+                                    <Tr>
+                                        <Td fontWeight='semibold'>Phone Number:</Td>
+                                        <Td>{phone}</Td>
                                     </Tr>
                                 </Tbody>
                             </Table>
@@ -71,7 +75,7 @@ function ProfileInfo({ id, firstname, lastname, username, email, avatar }) {
                             </Link>
                         </Box>
                     </VStack>
-                </Box>
+                </Card>
             </Center>
         </Box>
     );

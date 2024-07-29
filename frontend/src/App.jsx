@@ -14,7 +14,7 @@ function App() {
   return (
     <ChakraProvider>
       <Router>
-        <AppContent />
+        <AppContent/>
       </Router>
     </ChakraProvider>
   );
@@ -25,9 +25,9 @@ function AppContent() {
   const location = useLocation();
   return (
     <>
-        {location.pathname != "/login" && location.pathname != "/register" && <Navbar />}
+        {location.pathname != "/login" && location.pathname != "/register" && <Navbar/>}
         <Routes>
-          <Route path="/events" element={<EventsPage />} />
+          <Route path="/events" element={<EventsPage  />} />
           <Route path="/" element={<Navigate to="/events" replace />} />
           <Route path="/events/:id" element={<EventDetail />} />
           <Route path="/login" element={<LogInPage />} />
