@@ -9,6 +9,7 @@ import tesseralogo from '../assets/tesseralogo.png';
 import tesseralogo2 from '../assets/tesseralogo2.png';
 import { FaUserCircle } from "react-icons/fa";
 import AvatarMenu from './AvatarMenu';
+import AvatarLoggedIn from './AvatarLoggedIn';
 
 function Navbar() {
     const bg = useColorModeValue('blue.500', 'blue.400')
@@ -19,15 +20,15 @@ function Navbar() {
     
     const navigate = useNavigate();
     
-    useEffect(() => {
-      fetch(`http://localhost:5000/user/logged`, {
-        credentials: 'include'
-      })
-        .then(response => response.json())
-        .then(data => setUsers(data))
+    // useEffect(() => {
+    //   fetch(`http://localhost:5000/user/logged`, {
+    //     credentials: 'include'
+    //   })
+    //     .then(response => response.json())
+    //     .then(data => setUsers(data))
         
-        .catch(error => console.error('Error fetching events:', error));
-    }, []);
+    //     .catch(error => console.error('Error fetching events:', error));
+    // }, []);
 
     useEffect(() => {
       fetch(`http://localhost:5000/user/logged`, {
@@ -36,6 +37,7 @@ function Navbar() {
         .then(response => {
           if (response.status === 200) {
               setLoggedIn(true)
+              getData()
             }
             else {
               setLoggedIn(false)
@@ -44,6 +46,16 @@ function Navbar() {
         
         .catch(error => console.error('Error fetching events:', error));
     }, []);
+
+    async function getData() {
+      fetch(`http://localhost:5000/user/logged`, {
+        credentials: 'include'
+      })
+        .then(response => response.json())
+        .then(data => setUsers(data))
+        
+        .catch(error => console.error('Error fetching events:', error));
+    }
 
   return (
     <Stack>
@@ -70,13 +82,12 @@ function Navbar() {
                 firstname={user.firstname}
                 lastname={user.lastname}
                 username={user.username}
-                // loggedIn={loggedIn}
                 email={user.email}
                 avatar={user.avatar} 
                 phone={user.phone} 
               />
-          )) : <AvatarMenu/>}
-            
+          )) : <AvatarLoggedIn/>}
+            {/* <AvatarMenu></AvatarMenu> */}
 
         </Box>
       </Flex>

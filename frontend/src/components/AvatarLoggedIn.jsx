@@ -5,30 +5,12 @@ import {Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { FaUserCircle } from "react-icons/fa";
 
-function AvatarMenu({ firstname, lastname, email, avatar, username }) {
+function AvatarLoggedIn({ loggedIn, firstname, lastname, email, avatar, username }) {
     const bg = useColorModeValue('blue.500', 'blue.400')
     const color = useColorModeValue('white', 'gray.800')
     const { colorMode, toggleColorMode } = useColorMode();
     const [user, setUser] = useState([]);
     const navigate = useNavigate();
-
-    async function handleClick() {
-        fetch(`http://localhost:5000/logout`, {
-             method: 'POST',
-             headers: {
-                 'Content-Type': 'application/json',
-               },
-         })
-         .then( response => {
-             if (response.status === 200)
-                {
-                    navigate(`/events`)}
-           })
-           
-         .catch(error => console.error('Invalid Credentials:', error));
-         
-     }
-
 
     return(
         <Menu>
@@ -38,25 +20,17 @@ function AvatarMenu({ firstname, lastname, email, avatar, username }) {
             {/* <FaUserCircle size='40px'/> */}
 
               <Avatar
-                src={avatar}>
+                src={loggedIn == true ? avatar : ''}>
               </Avatar>
 
             </Center>
 
           </MenuButton>
           <MenuList colorScheme='blue' color={bg}>
-            <MenuGroup title='My Profile'>
-              <MenuItem as={Link} to={`/account`}>My Account</MenuItem>
-              <MenuItem as={Link} to={`/tickets`}>My Tickets</MenuItem>
-            </MenuGroup>
-            <MenuDivider />
             <MenuItem as={Link} to={`/login`}>Login</MenuItem>
-            <MenuItem color='red.500'>
-              <Link color='red.500'>Logout</Link>
-            </MenuItem>
           </MenuList>
         </Menu>
     );
 }
 
-export default AvatarMenu;
+export default AvatarLoggedIn;
