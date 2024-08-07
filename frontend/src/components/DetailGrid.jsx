@@ -1,11 +1,23 @@
 import { GridItem, Grid, Image, Box, Text, Button, Center, useColorModeValue} from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react';
 import { SlArrowRight } from "react-icons/sl";
+import SeatPicker from './SeatPicker';
 
-function DetailGrid({name, date, time, location, imageUrl, description}) {
+function DetailGrid({id, name, date, time, location, imageUrl, description}) {
     const bg = useColorModeValue('blue.500', 'blue.400')
     const bgGrey = useColorModeValue('gray.500', 'lightgrey')
     const color = useColorModeValue('white', 'gray.800')
+    const [users, setUsers] = useState([]);
+    const flip = useColorModeValue('gray.800', 'white')
+    
+    useEffect(() => {
+      fetch(`http://localhost:5000/user/logged`, {
+          credentials: 'include'
+      })
+          .then(response => response.json())
+          .then(setUsers)
+          .catch(error => console.error('Error fetching user:', error));
+    }, []);
 
   return (
     <Grid
@@ -40,7 +52,14 @@ function DetailGrid({name, date, time, location, imageUrl, description}) {
         </Text>
       </GridItem>
       <GridItem pl='2' bg={bg} area={'main'} rounded='md'>
-        Seat Map
+        {users.map(user => (
+            <SeatPicker
+                key={user.user_id}
+                user_id={user.user_id}
+                event_id={id}
+            />
+        ))}
+        
       </GridItem>
       <GridItem bg={bg} area={'image'} rounded='md'>
         <Box boxSize='sm'>

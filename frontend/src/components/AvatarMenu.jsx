@@ -15,6 +15,7 @@ function AvatarMenu({ firstname, lastname, email, avatar, username }) {
     async function handleClick() {
         fetch(`http://localhost:5000/logout`, {
              method: 'POST',
+             credentials: 'include',
              headers: {
                  'Content-Type': 'application/json',
                },
@@ -22,7 +23,9 @@ function AvatarMenu({ firstname, lastname, email, avatar, username }) {
          .then( response => {
              if (response.status === 200)
                 {
-                    navigate(`/events`)}
+                    navigate(`/login`)
+                    location.reload()
+                  }
            })
            
          .catch(error => console.error('Invalid Credentials:', error));
@@ -48,10 +51,7 @@ function AvatarMenu({ firstname, lastname, email, avatar, username }) {
               <MenuItem as={Link} to={`/tickets`}>My Tickets</MenuItem>
             </MenuGroup>
             <MenuDivider />
-            <MenuItem as={Link} to={`/login`}>Login</MenuItem>
-            <MenuItem color='red.500'>
-              <Link color='red.500'>Logout</Link>
-            </MenuItem>
+              <MenuItem onClick={handleClick} color='red.500'>Logout</MenuItem>
           </MenuList>
         </Menu>
     );

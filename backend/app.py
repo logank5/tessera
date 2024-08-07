@@ -4,6 +4,9 @@ from datetime import datetime # We'll be working with dates
 from datetime import timedelta # We'll be working with dates 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
+import threading
+from threading import Timer
+import time
 
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token, create_refresh_token,
@@ -124,9 +127,9 @@ def get_emails():
     
     return jsonify(email_list)
 
-#Get Tickets
-@app.route('/tickets', methods=['GET'])
-def get_tickets():
+# #Get Tickets
+# @app.route('/tickets', methods=['GET'])
+# def get_tickets():
     conn = get_db_connection()
     cursor = conn.cursor()
     
@@ -592,6 +595,226 @@ def get_user_details():
 
     return jsonify(detail_list)
 
+@app.route('/inventory/prices', methods=['POST'])
+def create_prices():
+    # Extract pricecode, event_id, value from the JSON payload
+    pricecode = request.json.get('pricecode')
+    event_id = request.json.get('event_id')
+    value = request.json.get('value')
+    
+
+    # Basic validation to ensure all fields are provided
+    if not pricecode or not event_id or not value:
+        return jsonify({'error': 'All fields (pricecode, event_id, value) are required.'}), 400
+
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Attempt to insert the new price into the Prices table
+        cursor.execute('INSERT INTO Prices (pricecode, event_id, value) VALUES (?, ?, ?)',
+                       (pricecode, event_id, value,))
+        conn.commit()  # Commit the changes to the database
+
+        # Retrieve the price_id of the newly created price to confirm creation
+        cursor.execute('SELECT price_id FROM Prices WHERE pricecode = ? AND event_id = ?', (pricecode, event_id,))
+        new_price_id = cursor.fetchone()
+
+        conn.close()
+
+        return jsonify({'message': 'Price created successfully', 'prices_id': new_price_id['price_id']}), 201
+
+    except sqlite3.IntegrityError:
+        return jsonify({'error': 'Price entry already exists.'}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/inventory/create', methods=['POST'])
+def create_ticket():
+    # Extract pricecode, event_id, value from the JSON payload
+    row_name = request.json.get('row_name')
+    seat_number = request.json.get('seat_number')
+    event_id = request.json.get('event_id')
+    pricecode = request.json.get('pricecode')
+    
+
+    # Basic validation to ensure all fields are provided
+    if not pricecode or not event_id or not row_name or not seat_number:
+        return jsonify({'error': 'All fields (pricecode, event_id, row_name, seat_number) are required.'}), 400
+
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Attempt to insert the new price into the Prices table
+        cursor.execute('INSERT INTO Tickets (pricecode, event_id, row_name, seat_number, status) VALUES (?, ?, ?, ?, ?)',
+                       (pricecode, event_id, row_name, seat_number, 'AVAILABLE',))
+        conn.commit()  # Commit the changes to the database
+
+
+        conn.close()
+
+        return jsonify({'message': 'Ticket created successfully'}), 201
+
+    except sqlite3.IntegrityError:
+        return jsonify({'error': 'Ticket entry already exists.'}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/inventory/tickets/<event_id>', methods=['GET'])
+def get_tickets(event_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Start with the base SQL query
+    cursor.execute("SELECT row_name, seat_number, status, value FROM Tickets JOIN Prices ON Tickets.pricecode = Prices.pricecode AND Tickets.event_id = Prices.event_id WHERE Tickets.event_id=?", (event_id,),)
+    
+    # Execute the query with or without the date filter
+    details = cursor.fetchall()
+    
+    # Convert the rows to dictionaries to make them serializable
+    detail_list = [dict(detail) for detail in details]
+    
+    conn.close()
+
+    return jsonify(detail_list)
+
+@app.route('/tickets/<user_id>', methods=['GET']) 
+# @jwt_required()
+def get_user_tickets(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Start with the base SQL query
+    cursor.execute('SELECT row_name, seat_number, event_id, purchase_date, pricecode FROM Tickets WHERE user_id = ?', (user_id,))
+    
+    # Execute the query with or without the date filter
+    details = cursor.fetchall()
+    
+    # Convert the rows to dictionaries to make them serializable
+    detail_list = [dict(detail) for detail in details]
+    
+    conn.close()
+
+    return jsonify(detail_list)
+
+@app.route('/inventory/reserve/<user_id>', methods=['PUT'])
+def reserve_seat(user_id):
+    # Extract email, username, and password from the JSON payload
+    seat_number = request.json.get('seat_number')
+    row_name = request.json.get('row_name')
+    event_id = request.json.get('event_id')
+    
+    # Basic validation to ensure all fields are provided
+    if not seat_number or not row_name or not event_id:
+        return jsonify({'error': 'A field (seat_number, row_name, event_id) is required.'}), 400
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute('SELECT status FROM Tickets WHERE seat_number = ? AND row_name = ? AND event_id = ?', (seat_number, row_name, event_id,))
+        status = cursor.fetchone()
+      
+        if status['status'] == 'AVAILABLE':
+            current_time = datetime.now().strftime('%H:%M')
+            print(current_time)
+            cursor.execute('UPDATE Tickets SET status = ?, user_id = ?, reserve_time = ? WHERE seat_number = ? AND row_name = ? AND event_id = ?', ('RESERVED', user_id, current_time, seat_number, row_name, event_id,))
+            conn.commit()  # Commit the changes to the database
+            
+            # unreserve()
+            return jsonify({'message': 'Seat reservation successful'}), 200
+        else:
+            conn.close()
+            return jsonify({'message': 'Seat unavailable'}), 404
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+# def unreserve():
+#     time = threading.Timer(10, unreserve_seat)
+#     time.start()
+#     time.sleep(10)
+    
+@app.route('/inventory/buy/<user_id>', methods=['PUT'])
+def buy_seat(user_id):
+    # Extract email, username, and password from the JSON payload
+    seat_number = request.json.get('seat_number')
+    row_name = request.json.get('row_name')
+    event_id = request.json.get('event_id')
+    
+    # Basic validation to ensure all fields are provided
+    if not seat_number or not row_name or not event_id:
+        return jsonify({'error': 'A field (seat_number, row_name, event_id) is required.'}), 400
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute('SELECT user_id, status FROM Tickets WHERE seat_number = ? AND row_name = ? AND event_id = ?', (seat_number, row_name, event_id,))
+        check = cursor.fetchone()
+        date = datetime.today().strftime('%Y-%m-%d')
+      
+        if (check['status'] == 'RESERVED') and (int(check[0]) == int(user_id)):
+            cursor.execute('UPDATE Tickets SET status = ?, user_id = ?, purchase_date = ? WHERE seat_number = ? AND row_name = ? AND event_id = ?', ('SOLD', user_id, date, seat_number, row_name, event_id,))
+            conn.commit()  # Commit the changes to the database
+            conn.close()
+            return jsonify({'message': 'Seat purchase successful'}), 200
+        else:
+            conn.close()
+            return jsonify({'message': 'Seat not reserved'}), 404
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/inventory/unreserve', methods=['PUT'])
+def unreserve_seat():
+    # Extract email, username, and password from the JSON payload
+    seat_number = request.json.get('seat_number')
+    row_name = request.json.get('row_name')
+    event_id = request.json.get('event_id')
+    
+    # Basic validation to ensure all fields are provided
+    if not seat_number or not row_name or not event_id:
+        return jsonify({'error': 'A field (seat_number, row_name, event_id) is required.'}), 400
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute('SELECT status FROM Tickets WHERE seat_number = ? AND row_name = ? AND event_id = ?', (seat_number, row_name, event_id,))
+        status = cursor.fetchone()
+      
+        if status['status'] == 'RESERVED':
+            cursor.execute('UPDATE Tickets SET status = ?, user_id = ? WHERE seat_number = ? AND row_name = ? AND event_id = ?', ('AVAILABLE', None, seat_number, row_name, event_id,))
+            conn.commit()  # Commit the changes to the database
+            conn.close()
+            return jsonify({'message': 'Seat now available'}), 200
+        else:
+            conn.close()
+            return jsonify({'message': 'Seat still reserved'}), 404
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/tickets/price/<event_id>/<row>/<number>', methods=['GET']) 
+# @jwt_required()
+def get_ticket_price(event_id, row, number):
+    
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Start with the base SQL query
+    cursor.execute("SELECT value FROM Tickets JOIN Prices ON Tickets.pricecode = Prices.pricecode AND Tickets.event_id = Prices.event_id WHERE Tickets.event_id=? AND Tickets.row_name = ? AND Tickets.seat_number = ?", (event_id, row, number),)    
+    # Execute the query with or without the date filter
+    price = cursor.fetchone()
+    
+    print(str(price[0]))
+    conn.close()
+    return(str(price[0]))
+    return(price)
 
 
 if __name__ == '__main__':
