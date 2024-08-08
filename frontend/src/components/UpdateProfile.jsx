@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Box, VStack, Text, Center, useColorModeValue,
+import {
+    Box, VStack, Text, Center, useColorModeValue,
     Spacer, Divider, Button, Heading, Card
- } from '@chakra-ui/react';
-import {InputGroup, Input, InputRightElement} from '@chakra-ui/react';
+} from '@chakra-ui/react';
+import { InputGroup, Input, InputRightElement } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { FaUserAlt, FaPhone } from "react-icons/fa";
@@ -26,25 +27,25 @@ function UpdateProfile({ id, firstname, lastname, username, email, avatar }) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(
-            {
-                new_username: new_username,
-                new_email: new_email,
-                phone: phone,
-                avatar: avatarUrl,
-            }
+                {
+                    new_username: new_username,
+                    new_email: new_email,
+                    phone: phone,
+                    avatar: avatarUrl,
+                }
             ),
         })
-         .then( response => {
-             if (response.status === 200)
-                {
-                    location.reload()}
-           })
-           
-         .catch(error => console.error('Update Failed:', error));
-         
-     }
+            .then(response => {
+                if (response.status === 200) {
+                    location.reload()
+                }
+            })
 
-    return(
+            .catch(error => console.error('Update Failed:', error));
+
+    }
+
+    return (
         <Box height='80vh'>
             <Center>
                 <Card rounded='5px' boxShadow={'5px'} width='45%' mt='50px' bg={color} height='58vh'>
@@ -52,41 +53,41 @@ function UpdateProfile({ id, firstname, lastname, username, email, avatar }) {
                         <Heading>
                             Update Account Details
                         </Heading>
-                        <Spacer p='10px'/>
+                        <Spacer p='10px' />
                         <InputGroup>
                             <InputRightElement pointerEvents='none'>
-                                <FaUserAlt/>
+                                <FaUserAlt />
                             </InputRightElement>
-                            <Input focusBorderColor={bg} type='text' value={new_username} 
+                            <Input focusBorderColor={bg} type='text' value={new_username}
                                 onChange={e => setNewUsername(e.target.value)} placeholder='Update Username' />
                         </InputGroup>
-                        <Spacer p='10px'/>
+                        <Spacer p='10px' />
                         <InputGroup>
                             <InputRightElement pointerEvents='none'>
-                                <MdMail/>
+                                <MdMail />
                             </InputRightElement>
-                            <Input focusBorderColor={bg} type='text' value={new_email} 
+                            <Input focusBorderColor={bg} type='text' value={new_email}
                                 onChange={e => setNewEmail(e.target.value)} placeholder='Update Email' />
                         </InputGroup>
-                        <Spacer p='10px'/>
+                        <Spacer p='10px' />
                         <InputGroup>
                             <InputRightElement pointerEvents='none'>
-                                <FaPhone/>
+                                <FaPhone />
                             </InputRightElement>
-                            <Input focusBorderColor={bg} type='text' value={phone} 
+                            <Input focusBorderColor={bg} type='text' value={phone}
                                 onChange={e => setPhone(e.target.value)} placeholder='Update Phone number' />
                         </InputGroup>
-                        <Spacer p='10px'/>
+                        <Spacer p='10px' />
                         <InputGroup>
                             <InputRightElement pointerEvents='none'>
-                                <FaImage/>
+                                <FaImage />
                             </InputRightElement>
-                            <Input focusBorderColor={bg} type='text' value={avatarUrl} 
+                            <Input focusBorderColor={bg} type='text' value={avatarUrl}
                                 onChange={e => setAvatarUrl(e.target.value)} placeholder='Update Avatar URL' />
                         </InputGroup>
-                        <Spacer p='30px'/>
-                        <Divider/>
-                        <Spacer p='10px'/>
+                        <Spacer p='30px' />
+                        <Divider />
+                        <Spacer p='10px' />
                         <Button onClick={handleClick} bg={bg} color={color} type='submit'>
                             Save Changes
                         </Button>

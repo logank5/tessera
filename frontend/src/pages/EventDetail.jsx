@@ -5,22 +5,23 @@ import { useEffect, useState } from 'react';
 import DetailGrid from '../components/DetailGrid';
 
 function EventDetail() {
-  const { id } = useParams(); 
-  const [events, setEvents] = useState([]);
-  
+  const { id } = useParams();
+  const [event, setEvent] = useState(null);
+
   useEffect(() => {
     fetch(`http://localhost:5000/events/${id}`, {
       credentials: 'include'
     })
 
       .then(response => response.json())
-      .then(setEvents)
+      .then((event) => setEvent(event[0]))
       .catch(error => console.error('Error fetching events:', error));
   }, []);
-  
+
   return (
-    <Box >
-        {events.map(event => (
+    <Box align='stretch'>
+      {
+        event ?
           <DetailGrid
             key={event.event_id}
             id={event.event_id}
@@ -29,9 +30,9 @@ function EventDetail() {
             time={event.time}
             description={event.description}
             location={event.location}
-            imageUrl={event.url} 
+            imageUrl={event.url}
           />
-        ))}
+          : null}
     </Box>
   );
 }

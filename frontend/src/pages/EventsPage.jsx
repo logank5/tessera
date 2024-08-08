@@ -27,7 +27,7 @@ function EventsPage() {
   const [location, setLocation] = React.useState('')
   const [afterDate, setAfterDate] = React.useState('')
   const [beforeDate, setBeforeDate] = React.useState('')
-  
+
 
   function handleDataFilter(name, beforeDate, afterDate, location) {
     setName(name);
@@ -40,23 +40,23 @@ function EventsPage() {
     'afterDate': '',
     'beforeDate': '',
     'location': '',
-    });
+  });
 
   // location=${location}&afterDate=${date}
 
 
   useEffect(() => {
     fetch(`http://localhost:5000/events?location=${location}&afterDate=${afterDate}&beforeDate=${beforeDate}&name=${name}`)
-    .then(response => response.json())
-    .then(setEvents)
-    .catch(error => console.error('Error fetching events:', error));
-    }, [name, location, afterDate, beforeDate]);
+      .then(response => response.json())
+      .then(setEvents)
+      .catch(error => console.error('Error fetching events:', error));
+  }, [name, location, afterDate, beforeDate]);
 
 
   return (
     <>
       {/* Add the sidebar with filter */}
-      <Filter sendDataToParent={handleDataFilter}/>
+      <Filter sendDataToParent={handleDataFilter} />
 
       {/* Add all the event cards */}
       <Container maxW="container.xl" centerContent>
@@ -69,7 +69,7 @@ function EventsPage() {
               date={event.date}
               time={event.time}
               location={event.location}
-              imageUrl={event.url} 
+              imageUrl={event.url}
             />
           ))}
         </SimpleGrid>

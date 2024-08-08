@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Center ,Flex, Divider, VStack, InputRightElement, InputGroup, Image } from '@chakra-ui/react';
+import { Center, Flex, Divider, VStack, InputRightElement, InputGroup, Image } from '@chakra-ui/react';
 import EventCard from './EventCard';
 import {
-  Drawer,
-  DrawerBody,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  useDisclosure,
-  Button,
-  Input,
-  useColorModeValue,
+    Drawer,
+    DrawerBody,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerOverlay,
+    DrawerContent,
+    DrawerCloseButton,
+    useDisclosure,
+    Button,
+    Input,
+    useColorModeValue,
 } from '@chakra-ui/react'
 
 import {
@@ -25,13 +25,13 @@ import {
     HStack,
     DarkMode,
     IconButton,
-  } from '@chakra-ui/react'
+} from '@chakra-ui/react'
 
 import { FaSearch } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { GrClear } from "react-icons/gr";
 
-function Filter({sendDataToParent}) {
+function Filter({ sendDataToParent }) {
 
     //Contants
     const bg = useColorModeValue('blue.500', 'blue.400')
@@ -40,7 +40,7 @@ function Filter({sendDataToParent}) {
 
     const { isOpen, onOpen, onClose, onToggle } = useDisclosure()
     const btnRef = React.useRef()
-    
+
     const [afterDate, setAfterDate] = useState('');
     const [beforeDate, setBeforeDate] = useState('');
     const [location, setLocation] = useState('');
@@ -57,10 +57,10 @@ function Filter({sendDataToParent}) {
         setName('');
     }
 
-    return(
+    return (
         <>
-          
-                
+
+
             {/* Accordian used for the filter */}
             <Accordion allowToggle p='10px' mt='80px' bg={color}>
                 <AccordionItem>
@@ -79,16 +79,16 @@ function Filter({sendDataToParent}) {
                             <InputGroup>
                                 <InputRightElement
                                     pointerEvents="none"
-                                    children={<FaSearch bg={bg}/>}
-                                /> 
-                                <Input type='text' value={name} 
-                                    color={bg} onChange={e => setName(e.target.value)} 
+                                    children={<FaSearch bg={bg} />}
+                                />
+                                <Input type='text' value={name}
+                                    color={bg} onChange={e => setName(e.target.value)}
                                     placeholder='Event Name:'
                                 />
                             </InputGroup>
-                            
+
                             <Center height='50px' p='5px'>
-                                <Divider orientation='vertical' borderColor={flip}/> 
+                                <Divider orientation='vertical' borderColor={flip} />
                             </Center>
 
                             {/* Search by location */}
@@ -96,28 +96,28 @@ function Filter({sendDataToParent}) {
                                 <InputRightElement
                                     pointerEvents="none"
                                     children={<FaLocationDot color={bg} />}
-                                /> 
-                                <Input type='text' value={location} color={bg} onChange={e => setLocation(e.target.value)} placeholder='Event Location:'/>
+                                />
+                                <Input type='text' value={location} color={bg} onChange={e => setLocation(e.target.value)} placeholder='Event Location:' />
                             </InputGroup>
-                                
+
                             <Center height='50px' p='5px'>
-                                <Divider orientation='vertical' borderColor={flip}/>
+                                <Divider orientation='vertical' borderColor={flip} />
                             </Center>
 
                             {/* Search by date */}
-                            <Input size='md' value={afterDate} color={bg} onChange={e => setAfterDate(e.target.value)}  type='date' />
+                            <Input size='md' value={afterDate} color={bg} onChange={e => setAfterDate(e.target.value)} type='date' />
                             <Center>
                                 <>-</>
                             </Center>
                             <Input size='md' value={beforeDate} color={bg} onChange={e => setBeforeDate(e.target.value)} type='date' />
-                            
+
                             <Center height='50px' p='5px'>
-                                <Divider orientation='vertical' borderColor={flip}/> 
+                                <Divider orientation='vertical' borderColor={flip} />
                             </Center>
 
                             {/* Apply Filter Changes Button */}
                             <Button bg={bg} color={color} onClick={handleClick} variant='outline' width='150px'>Apply</Button>
-                            
+
                             {/* Clear filter button */}
                             <IconButton onClick={clear} aria-label='clear' variant='outline' icon={<GrClear />} />
 

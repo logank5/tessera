@@ -10,7 +10,7 @@ function EventCard({ id, name, date, time, location, imageUrl }) {
   useEffect(() => {
     const updateTimer = () => {
       const eventDate = new Date(date + ' ' + time);
-      const now = new Date().getTime() ;
+      const now = new Date().getTime();
       const distance = eventDate - now;
 
       if (distance < 0) {
@@ -41,7 +41,7 @@ function EventCard({ id, name, date, time, location, imageUrl }) {
           <Image borderRadius="md" src={imageUrl} alt={`Image for ${name}`} objectFit="cover" width="full" />
         )}
         <VStack align="stretch" p="4">
-        <Heading size="md" my="2">{name}</Heading>
+          <Heading size="md" my="2">{name}</Heading>
           <Text fontSize="sm">Date: {date}</Text>
           <Text fontSize="sm">Time: {time}</Text>
           <Text fontSize="sm">Location: {location}</Text>

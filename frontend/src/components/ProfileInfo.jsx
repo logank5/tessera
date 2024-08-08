@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Box, VStack, Text, Heading, Avatar, Center, useColorModeValue,
+import {
+    Box, VStack, Text, Heading, Avatar, Center, useColorModeValue,
     Spacer, Divider, Link, Card
- } from '@chakra-ui/react';
-import {Table, TableContainer, Tr, Td, Tbody} from '@chakra-ui/react';
+} from '@chakra-ui/react';
+import { Table, TableContainer, Tr, Td, Tbody } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 function ProfileInfo({ firstname, lastname, username, email, avatar, phone }) {
@@ -13,32 +14,32 @@ function ProfileInfo({ firstname, lastname, username, email, avatar, phone }) {
 
     async function handleClick() {
         fetch(`http://localhost:5000/logout`, {
-             method: 'POST',
-             headers: {
-                 'Content-Type': 'application/json',
-               },
-         })
-         .then( response => {
-             if (response.status === 200)
-                {
-                    navigate(`/events`)}
-           })
-           
-         .catch(error => console.error('Invalid Credentials:', error));
-         
-     }
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                if (response.status === 200) {
+                    navigate(`/events`)
+                }
+            })
 
-    return(
-        <Box 
-            >
+            .catch(error => console.error('Invalid Credentials:', error));
+
+    }
+
+    return (
+        <Box
+        >
             <Center height='60vh'>
                 <Card rounded='5px' boxShadow={'5px'} width='30%' bg={color} p='20px'>
                     <VStack>
                         <Heading>
                             {firstname} {lastname}
                         </Heading>
-                        <Spacer/>
-                        <Avatar size='lg' src={avatar}/>
+                        <Spacer />
+                        <Avatar size='lg' src={avatar} />
                         <Text>
                             @{username}
                         </Text>
@@ -64,11 +65,11 @@ function ProfileInfo({ firstname, lastname, username, email, avatar, phone }) {
                                 </Tbody>
                             </Table>
                         </TableContainer>
-                        <Spacer/>
+                        <Spacer />
                         <Text>
                             Not {firstname} {lastname}?
                         </Text>
-                        <Divider/>
+                        <Divider />
                         <Box>
                             <Link onClick={handleClick} color='red.500'>
                                 Sign Out

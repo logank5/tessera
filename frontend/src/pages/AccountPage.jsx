@@ -4,10 +4,10 @@ import Accounts from '../components/Accounts';
 function AccountPage() {
   return (
     <>
-      <Accounts/>
+      <Accounts />
     </>
-    
-    
+
+
   );
 }
 

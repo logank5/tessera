@@ -11,10 +11,10 @@ const ColorModeSwitch = () => {
   return (
     <DarkMode>
       <IconButton onClick={() => toggleColorMode()} bg={bg} color={color}>
-        {colorMode === 'light' ? <FaMoon/> : <IoSunny size='50%'/>}
+        {colorMode === 'light' ? <FaMoon /> : <IoSunny size='50%' />}
       </IconButton>
     </DarkMode>
-    
+
   )
 }
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import TesseraSeatPicker from 'tessera-seat-picker';
-import {Button, VStack, Stack} from '@chakra-ui/react';
+import { Button, VStack, Stack } from '@chakra-ui/react';
 
 function SeatPicker({ user_id, event_id, getData }) {
   const [seats, setSeats] = useState([]);
@@ -30,7 +30,7 @@ function SeatPicker({ user_id, event_id, getData }) {
     fetchData();
   }, [event_id]);
 
-  
+
   useEffect(() => {
     if (seats.length > 0) {
       const newRowsMap = Object.values(
@@ -51,7 +51,7 @@ function SeatPicker({ user_id, event_id, getData }) {
       );
 
       setRowsMap(newRowsMap);
-      setLoading(false); 
+      setLoading(false);
     }
   }, [seats]);
 
@@ -84,7 +84,7 @@ function SeatPicker({ user_id, event_id, getData }) {
       reserveSeat(row, number)
       adding = true
       getData(row, number, adding)
-      
+
       setSelected((prevItems) => [...prevItems, id]);
       const updateTooltipValue = 'Added to cart';
 
@@ -100,22 +100,22 @@ function SeatPicker({ user_id, event_id, getData }) {
     }
   };
 
-  async function reserveSeat( row, number ) {
+  async function reserveSeat(row, number) {
     fetch(`http://localhost:5000/inventory/reserve/${user_id}`, {
       method: 'PUT',
       headers: {
-          'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(
-      {
+        {
           row_name: row,
           seat_number: number,
           event_id: event_id,
-      }
+        }
       ),
     })
-     
-    .catch(error => console.error('Reserve Failed:', error));
+
+      .catch(error => console.error('Reserve Failed:', error));
     setIsReserved(true);
   }
 
@@ -134,44 +134,44 @@ function SeatPicker({ user_id, event_id, getData }) {
       console.error('Error removing seat:', error);
     } finally {
       setLoading(false);
-      
+
     }
   };
 
-  async function unreserveSeat( row, number ) {
+  async function unreserveSeat(row, number) {
     fetch(`http://localhost:5000/inventory/unreserve`, {
       method: 'PUT',
       headers: {
-          'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(
-      {
+        {
           row_name: row,
           seat_number: number,
           event_id: event_id,
-      }
+        }
       ),
     })
-    .catch(error => console.error('Reserve Failed:', error));
+      .catch(error => console.error('Reserve Failed:', error));
     setIsReserved(false);
     getPrice(row, number);
   }
 
   return (
     <div>
-        {loading ? (
-          <h2>Loading...</h2> 
-        ) : (
-          <TesseraSeatPicker
-            addSeatCallback={addSeatCallback}
-            removeSeatCallback={removeSeatCallback}
-            rows={rowsMap}
-            maxReservableSeats={3}
-            alpha
-            visible
-            loading={loading}
-          />
-        )}
+      {loading ? (
+        <h2>Loading...</h2>
+      ) : (
+        <TesseraSeatPicker
+          addSeatCallback={addSeatCallback}
+          removeSeatCallback={removeSeatCallback}
+          rows={rowsMap}
+          maxReservableSeats={3}
+          alpha
+          visible
+          loading={loading}
+        />
+      )}
     </div>
   );
 }

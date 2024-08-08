@@ -1,6 +1,6 @@
 import Login from '../components/Login';
 
-function LogInPage(){
+function LogInPage() {
 
     return (
 

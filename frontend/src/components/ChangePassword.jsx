@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Box, VStack, Text, Center, useColorModeValue,
+import {
+    Box, VStack, Text, Center, useColorModeValue,
     Spacer, Divider, Button, Heading, Card, chakra
- } from '@chakra-ui/react';
-import {InputGroup, Input, InputRightElement, InputLeftElement} from '@chakra-ui/react';
+} from '@chakra-ui/react';
+import { InputGroup, Input, InputRightElement, InputLeftElement } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { FaUserAlt, FaPhone } from "react-icons/fa";
@@ -33,24 +34,24 @@ function ChangePassword({ id, firstname, lastname, username, email, avatar }) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(
-            {
-                old_password: old_password,
-                new_password: new_password,
-                confirm_password: confirm_password,
-            }
+                {
+                    old_password: old_password,
+                    new_password: new_password,
+                    confirm_password: confirm_password,
+                }
             ),
         })
-         .then( response => {
-             if (response.status === 200)
-                {
-                    navigate('/login')}
-           })
-           
-         .catch(error => console.error('Password Change Failed:', error));
-         
-     }
+            .then(response => {
+                if (response.status === 200) {
+                    navigate('/login')
+                }
+            })
 
-    return(
+            .catch(error => console.error('Password Change Failed:', error));
+
+    }
+
+    return (
         <Box height='80vh'>
             <Center>
                 <Card rounded='5px' boxShadow={'5px'} width='45%' mt='50px' bg={color} height='50vh'>
@@ -58,47 +59,47 @@ function ChangePassword({ id, firstname, lastname, username, email, avatar }) {
                         <Heading>
                             Change Password
                         </Heading>
-                        <Spacer p='10px'/>
+                        <Spacer p='10px' />
                         <InputGroup>
                             <InputRightElement pointerEvents='none'>
-                                <FaLock/>
+                                <FaLock />
                             </InputRightElement>
                             <Input
-                                    type={showPassword ? "text" : "password"}
-                                    placeholder="Enter Current Password"
-                                    color={bg}
-                                    value={old_password} onChange={e => setOldPassword(e.target.value)}
-                                />
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Enter Current Password"
+                                color={bg}
+                                value={old_password} onChange={e => setOldPassword(e.target.value)}
+                            />
                         </InputGroup>
-                        <Spacer p='10px'/>
+                        <Spacer p='10px' />
                         <InputGroup>
-                                <Input
-                                    type={showPassword ? "text" : "password"}
-                                    placeholder="Enter New Password"
-                                    color={bg}
-                                    value={new_password} onChange={e => setNewPassword(e.target.value)}
-                                />
-                                <InputRightElement pointerEvents='none'>
-                                <MdLockReset size='70%'/>
+                            <Input
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Enter New Password"
+                                color={bg}
+                                value={new_password} onChange={e => setNewPassword(e.target.value)}
+                            />
+                            <InputRightElement pointerEvents='none'>
+                                <MdLockReset size='70%' />
                             </InputRightElement>
-                            </InputGroup>
-                        <Spacer p='10px'/>
-                            <InputGroup>
-                                <Input
-                                    type={showPassword ? "text" : "password"}
-                                    placeholder="Confirm New Password"
-                                    color={bg}
-                                    value={confirm_password} onChange={e => setConfirmPassword(e.target.value)}
-                                />
-                                <InputRightElement width="3.3rem">
-                                    <Button h="1.75rem" size="sm" onClick={handleShowClick}>
+                        </InputGroup>
+                        <Spacer p='10px' />
+                        <InputGroup>
+                            <Input
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Confirm New Password"
+                                color={bg}
+                                value={confirm_password} onChange={e => setConfirmPassword(e.target.value)}
+                            />
+                            <InputRightElement width="3.3rem">
+                                <Button h="1.75rem" size="sm" onClick={handleShowClick}>
                                     {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
-                                    </Button>
-                                </InputRightElement>
-                            </InputGroup>
-                        <Spacer p='30px'/>
-                        <Divider/>
-                        <Spacer p='10px'/>
+                                </Button>
+                            </InputRightElement>
+                        </InputGroup>
+                        <Spacer p='30px' />
+                        <Divider />
+                        <Spacer p='10px' />
                         <Button onClick={handleClick} bg={bg} color={color} type='submit'>
                             Save Changes
                         </Button>

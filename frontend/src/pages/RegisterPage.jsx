@@ -1,6 +1,6 @@
 import Register from '../components/Register';
 
-function RegisterPage(){
+function RegisterPage() {
 
     return (
 
