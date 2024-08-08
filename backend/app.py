@@ -724,7 +724,10 @@ def reserve_seat(user_id):
             cursor.execute('UPDATE Tickets SET status = ?, user_id = ?, reserve_time = ? WHERE seat_number = ? AND row_name = ? AND event_id = ?', ('RESERVED', user_id, current_time, seat_number, row_name, event_id,))
             conn.commit()  # Commit the changes to the database
             
-            # unreserve()
+            t = threading.Timer(10, unreserve_seat)
+            t.start()
+            # countdown()
+            conn.close()
             return jsonify({'message': 'Seat reservation successful'}), 200
         else:
             conn.close()
@@ -733,10 +736,11 @@ def reserve_seat(user_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
-# def unreserve():
-#     time = threading.Timer(10, unreserve_seat)
-#     time.start()
-#     time.sleep(10)
+def countdown():
+    time.sleep(10)
+    print("Time up. Unreserving ticket")
+    unreserve_seat()
+    
     
 @app.route('/inventory/buy/<user_id>', methods=['PUT'])
 def buy_seat(user_id):

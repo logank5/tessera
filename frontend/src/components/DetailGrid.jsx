@@ -74,7 +74,7 @@ function DetailGrid({id, name, date, time, location, imageUrl, description}) {
       <GridItem bg={bgGrey} area={'purchase'} rounded='md'>
       <Center>
         <Button fontSize={'18'} rightIcon={<SlArrowRight />} mt={'1'} colorScheme='blue' variant=''>
-            Find Tickets
+            Checkout
         </Button>
       </Center>
         

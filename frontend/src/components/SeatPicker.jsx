@@ -69,18 +69,12 @@ function SeatPicker({ user_id, event_id }) {
     .catch(error => console.error('Error fetching seat price:', error));
   }
 
-  useEffect(() => {
-    setSeatPrice(seatPrice);
-  }, [seatPrice]);
-
   const addSeatCallback = async ({ row, number, id }, addCb) => {
     setLoading(true);
-    
 
     try {
       reserveSeat(row, number)
       // Your custom logic to reserve the seat goes here...
-      getPrice(row, number)
       setTotalPrice(totalPrice + Number(seatPrice))
 
       // Assuming everything went well...
@@ -114,6 +108,7 @@ function SeatPicker({ user_id, event_id }) {
      
     .catch(error => console.error('Reserve Failed:', error));
     setIsReserved(true);
+    getPrice(row, number);
   }
 
   const removeSeatCallback = async ({ row, number, id }, removeCb) => {
@@ -122,8 +117,6 @@ function SeatPicker({ user_id, event_id }) {
     try {
       // Your custom logic to remove the seat goes here...
       unreserveSeat(row, number)
-      getPrice(row, number)
-      console.log(seatPrice)
       setTotalPrice(totalPrice - Number(seatPrice))
 
       setSelected((list) => list.filter((item) => item !== id));
@@ -153,6 +146,7 @@ function SeatPicker({ user_id, event_id }) {
     })
     .catch(error => console.error('Reserve Failed:', error));
     setIsReserved(false);
+    getPrice(row, number);
   }
 
   return (
