@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { VStack } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { useEffect, useState } from 'react';
 import DetailGrid from '../components/DetailGrid';
 
@@ -19,7 +19,7 @@ function EventDetail() {
   }, []);
   
   return (
-    <VStack align='stretch'>
+    <Box >
         {events.map(event => (
           <DetailGrid
             key={event.event_id}
@@ -32,7 +32,7 @@ function EventDetail() {
             imageUrl={event.url} 
           />
         ))}
-    </VStack>
+    </Box>
   );
 }
 

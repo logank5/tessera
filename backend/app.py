@@ -724,9 +724,9 @@ def reserve_seat(user_id):
             cursor.execute('UPDATE Tickets SET status = ?, user_id = ?, reserve_time = ? WHERE seat_number = ? AND row_name = ? AND event_id = ?', ('RESERVED', user_id, current_time, seat_number, row_name, event_id,))
             conn.commit()  # Commit the changes to the database
             
-            t = threading.Timer(10, unreserve_seat)
-            t.start()
-            # countdown()
+            # t = threading.Timer(10, unreserve_seat)
+            # t.start()
+            countdown()
             conn.close()
             return jsonify({'message': 'Seat reservation successful'}), 200
         else:
@@ -818,7 +818,6 @@ def get_ticket_price(event_id, row, number):
     print(str(price[0]))
     conn.close()
     return(str(price[0]))
-    return(price)
 
 
 if __name__ == '__main__':

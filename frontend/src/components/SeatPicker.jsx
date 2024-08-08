@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import TesseraSeatPicker from 'tessera-seat-picker';
-import {Text} from '@chakra-ui/react';
+import {Button, VStack, Stack} from '@chakra-ui/react';
 
-function SeatPicker({ user_id, event_id }) {
+function SeatPicker({ user_id, event_id, getData }) {
   const [seats, setSeats] = useState([]);
   const [rowsMap, setRowsMap] = useState([]);
   const [selected, setSelected] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isReserved, setIsReserved] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0.0);
-  const [seatPrice, setSeatPrice] = useState('')
+  let adding = true;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,33 +56,42 @@ function SeatPicker({ user_id, event_id }) {
   }, [seats]);
 
 
-  async function getPrice( row, number ) {
-    fetch(`http://localhost:5000/tickets/price/${event_id}/${row}/${number}`, {
-      method: 'GET',
-      headers: {
-          'Content-Type': 'application/json',
-      },
+  // async function getPrice( row, number ) {
+  //   fetch(`http://localhost:5000/tickets/price/${event_id}/${row}/${number}`, {
+  //     method: 'GET',
+  //     headers: {
+  //         'Content-Type': 'application/json',
+  //     },
 
-    })
-    .then(response => response.json())
-    .then(setSeatPrice)  
-    .catch(error => console.error('Error fetching seat price:', error));
-  }
+  //   })
+  //   .then(response => response.json())
+  //   .then(price => {
+  //     console.log(price)
+  //     if (adding == true){
+  //       setTotalPrice(totalPrice + price)
+  //     }
+  //     if (adding == false) {
+  //       setTotalPrice(totalPrice - price)
+  //     }
+  //   })  
+  //   .catch(error => console.error('Error fetching seat price:', error));
+  // }
 
   const addSeatCallback = async ({ row, number, id }, addCb) => {
     setLoading(true);
 
     try {
       reserveSeat(row, number)
-      // Your custom logic to reserve the seat goes here...
-      setTotalPrice(totalPrice + Number(seatPrice))
-
-      // Assuming everything went well...
+      adding = true
+      getData(row, number, adding)
+      
       setSelected((prevItems) => [...prevItems, id]);
       const updateTooltipValue = 'Added to cart';
 
       // Important to call this function if the seat was successfully selected - it helps update the screen
       addCb(row, number, id, updateTooltipValue);
+
+
     } catch (error) {
       // Handle any errors here
       console.error('Error adding seat:', error);
@@ -108,16 +117,15 @@ function SeatPicker({ user_id, event_id }) {
      
     .catch(error => console.error('Reserve Failed:', error));
     setIsReserved(true);
-    getPrice(row, number);
   }
 
   const removeSeatCallback = async ({ row, number, id }, removeCb) => {
     setLoading(true);
-
     try {
       // Your custom logic to remove the seat goes here...
       unreserveSeat(row, number)
-      setTotalPrice(totalPrice - Number(seatPrice))
+      adding = false
+      getData(row, number, adding)
 
       setSelected((list) => list.filter((item) => item !== id));
       removeCb(row, number);
@@ -151,20 +159,19 @@ function SeatPicker({ user_id, event_id }) {
 
   return (
     <div>
-      {loading ? (
-        <h2>Loading...</h2> 
-      ) : (
-        <TesseraSeatPicker
-          addSeatCallback={addSeatCallback}
-          removeSeatCallback={removeSeatCallback}
-          rows={rowsMap}
-          maxReservableSeats={3}
-          alpha
-          visible
-          loading={loading}
-        />
-      )}
-      <Text>{totalPrice}</Text>
+        {loading ? (
+          <h2>Loading...</h2> 
+        ) : (
+          <TesseraSeatPicker
+            addSeatCallback={addSeatCallback}
+            removeSeatCallback={removeSeatCallback}
+            rows={rowsMap}
+            maxReservableSeats={3}
+            alpha
+            visible
+            loading={loading}
+          />
+        )}
     </div>
   );
 }
