@@ -5,6 +5,7 @@ import { TabList, Tabs, Tab, TabPanels, TabPanel } from '@chakra-ui/react'
 import ProfileInfo from './ProfileInfo';
 import UpdateProfile from './UpdateProfile';
 import ChangePassword from './ChangePassword';
+import UserTickets from './UserTickets';
 
 function Accounts() {
     const [user, setUser] = useState([]);
@@ -41,7 +42,7 @@ function Accounts() {
                             Change Password
                         </Tab>
                         <Tab _selected={{ bg: color, color: flip }} color='white' fontWeight='bold'>
-                            Payment Details
+                            User Tickets
                         </Tab>
                     </TabList>
 
@@ -85,7 +86,14 @@ function Accounts() {
                         </TabPanel>
 
                         <TabPanel>
-                            <p>Payment</p>
+                            {
+                                user ?
+                                    <UserTickets
+                                        key={user.user_id}
+                                        id={user.user_id}
+                                        username={user.username}
+                                    />
+                                    : null}
                         </TabPanel>
 
                     </TabPanels>

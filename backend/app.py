@@ -534,7 +534,7 @@ def delete_user():
         conn.commit()  # Commit the changes to the database
         return jsonify({'message': 'User Successfully Deleted'}), 200
       else:
-          return jsonify({'message': 'User not deleted: Incorrect Password'}), 200
+          return jsonify({'message': 'User not deleted: Incorrect Password'}), 400
           
       
     return jsonify({'message': 'User does not exist.'}), 404
@@ -675,6 +675,7 @@ def get_tickets(event_id):
 
     return jsonify(detail_list)
 
+#Get all user tickets
 @app.route('/tickets/<user_id>', methods=['GET']) 
 # @jwt_required()
 def get_user_tickets(user_id):
@@ -682,7 +683,7 @@ def get_user_tickets(user_id):
     cursor = conn.cursor()
     
     # Start with the base SQL query
-    cursor.execute('SELECT row_name, seat_number, event_id, purchase_date, pricecode FROM Tickets WHERE user_id = ? AND status', (user_id,))
+    cursor.execute('SELECT row_name, seat_number, event_id, purchase_date, pricecode FROM Tickets WHERE user_id = ? AND status = ?', (user_id, 'SOLD',))
     
     # Execute the query with or without the date filter
     details = cursor.fetchall()
@@ -836,24 +837,45 @@ def create_payment_intent():
     except Exception as e:
         return jsonify(error=str(e)), 403
 
-@app.route('/complete-purchase', methods=['POST'])
-def complete_purchase():
-    try:
-        data = request.json
-        payment_intent_id = data['paymentIntentId']
-        seats = data['seats']
+# @app.route('/complete-purchase', methods=['POST'])
+# def complete_purchase():
+#     try:
+#         data = request.json
+#         payment_intent_id = data['paymentIntentId']
+#         seats = data['seats']
         
-        # More Docs: https://docs.stripe.com/api/payment_intents/retrieve
-        payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id)
-        if payment_intent.status != 'succeeded':
-            return jsonify({"error": "Payment not successful"}), 400
+#         # More Docs: https://docs.stripe.com/api/payment_intents/retrieve
+#         payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id)
+#         if payment_intent.status != 'succeeded':
+#             return jsonify({"error": "Payment not successful"}), 400
         
-        ### This is where you should process the sale
-        ### Remember everything you need to assign seats to an account
-        ### You'll probably need more inputs
-        ### Create functions to help you with this! Break up your code
+#         ### This is where you should process the sale
+#         ### Remember everything you need to assign seats to an account
+#         ### You'll probably need more inputs
+#         ### Create functions to help you with this! Break up your code
 
-        return jsonify({"message": "Purchase completed successfully"})
+#         return jsonify({"message": "Purchase completed successfully"})
+    
+
+@app.route('/event/<event_id>', methods=['GET']) 
+def get_event_details(event_id):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Start with the base SQL query
+        cursor.execute('SELECT name, date FROM Events JOIN Tickets ON Tickets.event_id = Events.event_id WHERE Tickets.event_id = ?', (event_id,))    
+    
+        
+        # Execute the query with or without the date filter
+        details = cursor.fetchall()
+        
+        # Convert the rows to dictionaries to make them serializable
+        detail_list = [dict(detail) for detail in details]
+        
+        conn.close()
+
+        return jsonify(detail_list)
     
     except Exception as e:
         return jsonify(error=str(e)), 500

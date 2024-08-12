@@ -22,7 +22,7 @@ function AvatarMenu({ firstname, lastname, email, avatar, username }) {
     })
       .then(response => {
         if (response.status === 200) {
-          navigate(`/login`)
+          navigate(`/events`)
           location.reload()
         }
       })

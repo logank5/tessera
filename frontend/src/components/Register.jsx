@@ -51,13 +51,15 @@ function Register() {
             credentials: 'same-origin'
         })
             .then(response => {
-                if (response.status === 200) { navigate(`/events`) }
+                if (response.status === 200) { navigate(`/login`) }
             })
 
             .catch(error => console.error('User Creation Unsuccessful:', error));
 
     }
-
+    async function returnHome() {
+        navigate(`/events`)
+    }
 
     return (
         <>
@@ -69,11 +71,11 @@ function Register() {
             >
 
                 <GridItem >
-
+                    <Button m='25px' bg={bg} color={color} onClick={returnHome}>Return Home</Button>
                 </GridItem>
                 <GridItem>
                     <Center>
-                        <Box width='100%' height='100vh' pt='50%' bg={color} pl='20%' pr='20%'>
+                        <Box width='100%' height='100vh' pt='40%' bg={color} pl='20%' pr='20%'>
                             <Stack
                                 flexDir="column"
                                 mb="2"

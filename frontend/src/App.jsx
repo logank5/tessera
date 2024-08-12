@@ -13,7 +13,6 @@ import Checkout from './pages/Checkout';
 import PaymentForm from './components/PaymentForm';
 
 function App() {
-  const totalAmount = 50.00; // Example amount in dollars
   return (
     <ChakraProvider>
       <Router>

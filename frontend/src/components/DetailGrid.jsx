@@ -66,10 +66,10 @@ function DetailGrid({ id, name, date, time, location, imageUrl, description }) {
     <Grid
       templateAreas={`"header header header"
                       "nav main image"
-                      "purchase footer footer"`}
+                      "purchase main image"`}
       gridTemplateRows={'50px 1fr 50px'}
       gridTemplateColumns={'300px 1fr'}
-      h='250px'
+      h='87vh'
       gap={5}
       m={5}
       fontSize={'18px'}
@@ -77,10 +77,10 @@ function DetailGrid({ id, name, date, time, location, imageUrl, description }) {
       fontWeight='bold'
       mt='100px'
     >
-      <GridItem pl='2' bg={bgGrey} paddingTop={'1'} area={'header'} rounded='md' alignContent='center'>
+      <GridItem pl='15' bg={bgGrey} paddingTop={'1'} area={'header'} rounded='md' alignContent='center'>
         Event Title: {name}
       </GridItem>
-      <GridItem pl='2' bg={bg} area={'nav'} rounded='md'>
+      <GridItem bg={bg} area={'nav'} rounded='md' p='15px'>
         <Text fontWeight='semibold' fontSize={'18px'}>
           Event Details:
         </Text>
@@ -112,10 +112,8 @@ function DetailGrid({ id, name, date, time, location, imageUrl, description }) {
           <Center justifyContent='center'>
             <Image src={imageUrl} padding={5} alt='test' />
           </Center>
+          <Text fontSize='15px' p='25px'>Description: {description}</Text>
         </Box>
-      </GridItem>
-      <GridItem pl='2' bg={bg} area={'footer'} rounded='md'>
-        {description}
       </GridItem>
       <GridItem bg={bgGrey} area={'purchase'} rounded='md'>
         <Center>

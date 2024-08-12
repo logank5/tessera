@@ -46,17 +46,24 @@ function Login() {
 
     }
 
+    async function returnHome() {
+        navigate(`/events`)
+    }
+
 
 
     return (
         <Flex>
-            <Box width='80%' height='100vh' pt='15%'>
+            
+            <Box width='80%' height='100vh'>
+                <Button m='25px' bg={bg} color={color} onClick={returnHome}>Return Home</Button>
                 <Stack
                     flexDir="column"
                     mb="2"
                     justifyContent="center"
                     alignItems="center"
                     mt={'80px'}
+                    pt='15%'
                 >
                     <Text fontSize='25px' fontWeight="bold" color={bg}>
                         Login
@@ -136,13 +143,13 @@ function Login() {
                 </Stack>
             </Box>
             <Spacer />
-            <Box pt='300px' bg={bg} height='100vh' width='30%' textShadow={`0 0 20px ${flip}`}
-                bgImage="url('https://pm1.aminoapps.com/6975/01764693b7b72696a4edb83eae0a811be0b7af03r1-576-1024v2_uhq.jpg')"
+            <Box pt='300px' bg={bg} height='100vh' width='30%' textShadow={`0 0 20px white`}
+                bgImage="url('https://images.pexels.com/photos/2842763/pexels-photo-2842763.jpeg?auto=compress&cs=tinysrgb&w=800')"
             >
                 <Stack mt='30%'>
-                    <Text align='center' fontWeight="bold" color={color} fontSize='30px'>New Here?</Text>
+                    <Text align='center' fontWeight="bold" color='white' fontSize='30px'>New Here?</Text>
                     <Spacer />
-                    <Text align='center' fontWeight="bold" color={color} fontSize='20px'>
+                    <Text align='center' fontWeight="bold" color='white' fontSize='20px'>
                         Sign up to see your favorite events now!
                     </Text>
                     <Spacer mb='10px' />
@@ -150,7 +157,7 @@ function Login() {
                         <DarkMode>
                             <Button align='center' borderRadius='100px' shadow={`0 0 20px ${flip}`}
                                 as={Link} to={`/register`}
-                                color={color} bg={bg} width='30%'>
+                                color='white' bg={bg} width='30%'>
                                 Sign Up
                             </Button>
                         </DarkMode>

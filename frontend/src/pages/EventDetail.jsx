@@ -3,10 +3,28 @@ import { useParams } from 'react-router-dom';
 import { Box } from '@chakra-ui/react'
 import { useEffect, useState } from 'react';
 import DetailGrid from '../components/DetailGrid';
+import { useNavigate } from 'react-router-dom';
 
 function EventDetail() {
   const { id } = useParams();
   const [event, setEvent] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/user/logged`, {
+      credentials: 'include'
+    })
+      .then(response => {
+        if (response.status === 200) {
+          navigate(`/events/${id}`)
+        }
+        else {
+          navigate(`/login`)
+        }
+      })
+
+      .catch(error => console.error('Error fetching events:', error));
+  }, []);
 
   useEffect(() => {
     fetch(`http://localhost:5000/events/${id}`, {

@@ -9,8 +9,20 @@ import { useNavigate } from 'react-router-dom';
 import { FaUserAlt, FaPhone } from "react-icons/fa";
 import { MdMail } from "react-icons/md";
 import { FaImage } from "react-icons/fa6";
+import {
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+} from '@chakra-ui/react'
+import { useDisclosure } from '@chakra-ui/react';
+import { FaTrashAlt } from "react-icons/fa";
 
-function UpdateProfile({ id, firstname, lastname, username, email, avatar }) {
+
+function UpdateProfile({ id, username }) {
     const bg = useColorModeValue('blue.500', 'blue.400')
     const color = useColorModeValue('white', 'gray.800')
     const flip = useColorModeValue('gray.800', 'white')
@@ -19,6 +31,8 @@ function UpdateProfile({ id, firstname, lastname, username, email, avatar }) {
     const [new_email, setNewEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [avatarUrl, setAvatarUrl] = useState('');
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const [password, setPassword] = useState('');
 
     async function handleClick() {
         fetch(`http://localhost:5000/user/update/${id}`, {
@@ -45,10 +59,40 @@ function UpdateProfile({ id, firstname, lastname, username, email, avatar }) {
 
     }
 
+    async function deleteUser() {
+        fetch(`http://localhost:5000/logout`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .catch(error => console.error('Invalid Credentials:', error));
+        fetch(`http://localhost:5000/user`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+                {
+                    username: username,
+                    password: password,
+                }
+            ),
+        })
+            .then(response => {
+                if (response.status === 200) {
+                    navigate(`/login`)
+                }
+            })
+            .catch(error => console.error('Update Failed:', error));
+
+    }
+
     return (
         <Box height='80vh'>
             <Center>
-                <Card rounded='5px' boxShadow={'5px'} width='45%' mt='50px' bg={color} height='58vh'>
+                <Card rounded='5px' boxShadow={'5px'} width='45%' mt='50px' bg={color} height='62vh'>
                     <VStack p='30px'>
                         <Heading>
                             Update Account Details
@@ -91,6 +135,23 @@ function UpdateProfile({ id, firstname, lastname, username, email, avatar }) {
                         <Button onClick={handleClick} bg={bg} color={color} type='submit'>
                             Save Changes
                         </Button>
+                        <Button onClick={onOpen} fontSize={'18'} rightIcon={<FaTrashAlt />} mt={'1'} bg='red.500' color={color} variant=''>
+                            Delete User
+                        </Button>
+                        <Modal isOpen={isOpen} onClose={onClose}>
+                            <ModalOverlay />
+                            <ModalContent>
+                                <ModalHeader alignSelf='center'>Are you sure?</ModalHeader>
+                                <InputGroup m='10px' width='80%' alignSelf='center'>
+                                    <Input type='text' value={password}
+                                        onChange={e => setPassword(e.target.value)} placeholder='Enter password to confirm' />
+                                </InputGroup>
+                                <Button m='10px' width='50%' alignSelf='center' color='red.500' onClick={deleteUser}>
+                                    Confirm Delete
+                                </Button>
+
+                            </ModalContent>
+                        </Modal>
                     </VStack>
                 </Card>
             </Center>
