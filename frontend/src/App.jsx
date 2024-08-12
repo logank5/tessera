@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, Box } from '@chakra-ui/react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import EventsPage from './pages/EventsPage';
@@ -9,8 +9,11 @@ import AccountPage from './pages/AccountPage';
 import TicketsPage from './pages/TicketsPage';
 import ChangePassword from './pages/ChangePassword';
 import RegisterPage from './pages/RegisterPage';
+import Checkout from './pages/Checkout';
+import PaymentForm from './components/PaymentForm';
 
 function App() {
+  const totalAmount = 50.00; // Example amount in dollars
   return (
     <ChakraProvider>
       <Router>
@@ -35,6 +38,7 @@ function AppContent() {
         <Route path="/tickets" element={<TicketsPage />} />
         <Route path="/changepassword" element={<ChangePassword />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Routes>
     </>
   );

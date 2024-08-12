@@ -2,17 +2,18 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Text, GridItem, Grid } from '@chakra-ui/react'
 import { useEffect, useState } from 'react';
+import PaymentForm from '../components/PaymentForm'
 
-function TicketsPage() {
+function Checkout() {
   const { id } = useParams();
   const [events, setEvents] = useState([]);
 
+
+
   return (
-    <Text>
-      This is the tickets page
-    </Text>
+    <PaymentForm/>
 
   );
 }
 
-export default TicketsPage;
+export default Checkout;

@@ -34,7 +34,10 @@ function SeatPicker({ user_id, event_id, getData }) {
   useEffect(() => {
     if (seats.length > 0) {
       const newRowsMap = Object.values(
+        //iterative function, over all elements in seats state
+        //acc is accumulator, cur is current element
         seats.reduce((acc, cur) => {
+          //object containing all seat data for the map
           const seatInfo = {
             id: cur.row_name + cur.seat_number,
             number: cur.seat_number,
@@ -42,8 +45,10 @@ function SeatPicker({ user_id, event_id, getData }) {
             tooltip: String('$' + cur.value),
           };
           if (!acc[cur.row_name]) {
+            //set the accumulated seats with current row name to new seat info
             acc[cur.row_name] = [seatInfo];
           } else {
+            //set seat info to end of the accumulator
             acc[cur.row_name].push(seatInfo);
           }
           return acc;
@@ -54,28 +59,6 @@ function SeatPicker({ user_id, event_id, getData }) {
       setLoading(false);
     }
   }, [seats]);
-
-
-  // async function getPrice( row, number ) {
-  //   fetch(`http://localhost:5000/tickets/price/${event_id}/${row}/${number}`, {
-  //     method: 'GET',
-  //     headers: {
-  //         'Content-Type': 'application/json',
-  //     },
-
-  //   })
-  //   .then(response => response.json())
-  //   .then(price => {
-  //     console.log(price)
-  //     if (adding == true){
-  //       setTotalPrice(totalPrice + price)
-  //     }
-  //     if (adding == false) {
-  //       setTotalPrice(totalPrice - price)
-  //     }
-  //   })  
-  //   .catch(error => console.error('Error fetching seat price:', error));
-  // }
 
   const addSeatCallback = async ({ row, number, id }, addCb) => {
     setLoading(true);
@@ -152,9 +135,9 @@ function SeatPicker({ user_id, event_id, getData }) {
         }
       ),
     })
+      .then(setIsReserved(false))
       .catch(error => console.error('Reserve Failed:', error));
-    setIsReserved(false);
-    getPrice(row, number);
+    
   }
 
   return (
@@ -166,7 +149,7 @@ function SeatPicker({ user_id, event_id, getData }) {
           addSeatCallback={addSeatCallback}
           removeSeatCallback={removeSeatCallback}
           rows={rowsMap}
-          maxReservableSeats={3}
+          maxReservableSeats={4}
           alpha
           visible
           loading={loading}

@@ -3,6 +3,18 @@ import React, { useEffect, useState } from 'react';
 import { SlArrowRight } from "react-icons/sl";
 import SeatPicker from './SeatPicker';
 import { FaShoppingCart } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
+import PaymentForm from './PaymentForm';
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from '@chakra-ui/react'
+import { useDisclosure } from '@chakra-ui/react';
 
 function DetailGrid({ id, name, date, time, location, imageUrl, description }) {
   const bg = useColorModeValue('blue.500', 'blue.400')
@@ -11,6 +23,9 @@ function DetailGrid({ id, name, date, time, location, imageUrl, description }) {
   const [user, setUser] = useState(null);
   const flip = useColorModeValue('gray.800', 'white')
   const [totalPrice, setTotalPrice] = useState(0.0);
+  const navigate = useNavigate();
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
 
   async function getPrice(row, number, adding) {
     fetch(`http://localhost:5000/tickets/price/${id}/${row}/${number}`, {
@@ -22,7 +37,6 @@ function DetailGrid({ id, name, date, time, location, imageUrl, description }) {
     })
       .then(response => response.json())
       .then(price => {
-        console.log(price)
         if (adding == true) {
           setTotalPrice(totalPrice + price)
         }
@@ -41,6 +55,12 @@ function DetailGrid({ id, name, date, time, location, imageUrl, description }) {
       .then((user) => setUser(user[0]))
       .catch(error => console.error('Error fetching user:', error));
   }, []);
+
+  async function check() {
+    navigate(`/checkout`)
+  }
+
+
 
   return (
     <Grid
@@ -78,7 +98,6 @@ function DetailGrid({ id, name, date, time, location, imageUrl, description }) {
         {
           user ?
             <SeatPicker
-              key={user.user_id}
               user_id={user.user_id}
               event_id={id}
               getData={getPrice}
@@ -100,12 +119,25 @@ function DetailGrid({ id, name, date, time, location, imageUrl, description }) {
       </GridItem>
       <GridItem bg={bgGrey} area={'purchase'} rounded='md'>
         <Center>
-          <Button fontSize={'18'} rightIcon={<FaShoppingCart />} mt={'1'} colorScheme='blue' variant=''>
+          <Button onClick={onOpen} fontSize={'18'} rightIcon={<FaShoppingCart />} mt={'1'} colorScheme='blue' variant=''>
             ${totalPrice}
           </Button>
+          <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Checkout</ModalHeader>
+              {
+                user ?
+                  <PaymentForm totalAmount={totalPrice} user_id={user.user_id} id={id} />
+                  : null
+              }
+            </ModalContent>
+          </Modal>
+
         </Center>
 
       </GridItem>
+
     </Grid>
   );
 }
