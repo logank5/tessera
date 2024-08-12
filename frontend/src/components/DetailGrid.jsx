@@ -94,7 +94,7 @@ function DetailGrid({ id, name, date, time, location, imageUrl, description }) {
           Location: {location}
         </Text>
       </GridItem>
-      <GridItem pl='2' bg={bg} area={'main'} rounded='md'>
+      <GridItem bg={bg} area={'main'} rounded='md'>
         {
           user ?
             <SeatPicker
