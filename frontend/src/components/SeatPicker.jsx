@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TesseraSeatPicker from 'tessera-seat-picker';
 import { Button, VStack, Stack } from '@chakra-ui/react';
 
-function SeatPicker({ user_id, event_id, getData }) {
+function SeatPicker({ user_id, event_id, getData, getId }) {
   const [seats, setSeats] = useState([]);
   const [rowsMap, setRowsMap] = useState([]);
   const [selected, setSelected] = useState([]);
@@ -67,6 +67,7 @@ function SeatPicker({ user_id, event_id, getData }) {
       reserveSeat(row, number)
       adding = true
       getData(row, number, adding)
+      getId(row, number, adding)
 
       setSelected((prevItems) => [...prevItems, id]);
       const updateTooltipValue = 'Added to cart';
@@ -109,6 +110,7 @@ function SeatPicker({ user_id, event_id, getData }) {
       unreserveSeat(row, number)
       adding = false
       getData(row, number, adding)
+      getId(row, number, adding)
 
       setSelected((list) => list.filter((item) => item !== id));
       removeCb(row, number);

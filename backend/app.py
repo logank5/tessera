@@ -10,6 +10,10 @@ import time
 
 import stripe
 
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token, create_refresh_token,
     get_jwt_identity, get_jwt, set_access_cookies,
@@ -739,14 +743,19 @@ def countdown():
 @app.route('/inventory/buy/<user_id>', methods=['PUT'])
 def buy_seat(user_id):
     event_id = request.json.get('event_id')
-    # to_email = request.json.get('to_email')
+    to_email = request.json.get('to_email')
     seat_ids = []
     
     # Basic validation to ensure all fields are provided
     if not event_id:
-        return jsonify({'error': 'A field (event_id) is required.'}), 400
+        return jsonify({'error': 'A field (event_id, to_email) is required.'}), 400
 
     try:
+        # if not to_email:
+        #     cursor.execute('SELECT email from Users WHERE user_id = ?', (user_id,))
+        #     to_email=cursor.fetchone()
+        print(to_email)
+
         conn = get_db_connection()
         cursor = conn.cursor()
 
@@ -757,7 +766,12 @@ def buy_seat(user_id):
         seats = [dict(seat_value) for seat_value in seat_values]
         for seat in seats:
             seat_ids.append(seat['row_name'] + str(seat['seat_number']))
-        print(seat_ids)
+        print(seat_values[0][2])
+        cursor.execute('SELECT from Events WHERE event_id = ?', (event_id))
+        event_name = cursor.fetchone()
+        print(event_name)
+        
+        send_email(to_email, seat_ids, event_name)
 
         cursor.execute('UPDATE Tickets SET status = ?, purchase_date = ? WHERE status = ? AND user_id = ? AND event_id = ?', ('SOLD', date, 'RESERVED', user_id, event_id,))
         conn.commit()  # Commit the changes to the database
@@ -768,7 +782,7 @@ def buy_seat(user_id):
         if new_status['status'] == 'SOLD':
             return jsonify({'message': 'Seat purchase successful'}), 200
         else:
-            return jsonify({'message': 'Seat purchase failed'}), 400
+            return jsonify({'message': 'Seat purchase failed'}), 404
         
             
     except Exception as e:
@@ -880,6 +894,33 @@ def get_event_details(event_id):
     except Exception as e:
         return jsonify(error=str(e)), 500
     
+def send_email(to_email, seats, name):
+    # Gmail account credentials
+    from_email = 'lkemprow@gmail.com'
+    from_password = 'mumy bmvp nfwj rwqa'  
+    seat_list = ', '.join(seats)
+
+    # Setup the MIME
+    msg = MIMEMultipart()
+    msg['From'] = from_email
+    msg['To'] = 'lkemprow@gmail.com'
+    msg['Subject'] = 'Tessera: Ticket Purchase Complete for ' + name
+    body='Thank you for your purchase! Seats purchased:' + seat_list
+
+    # Attach the email body
+    msg.attach(MIMEText(body, 'plain'))
+
+    try:
+        # Connect to the Gmail SMTP server
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()  # Secure the connection
+        server.login(from_email, from_password)  
+        text = msg.as_string()  # Convert the message to a string
+        server.sendmail(from_email, to_email, text)  # Send the email
+        server.quit()  # Close the connection
+        print(f"Email sent to {to_email} successfully.")
+    except Exception as e:
+        print(f"Failed to send email. Error: {e}")
 
 
 if __name__ == '__main__':

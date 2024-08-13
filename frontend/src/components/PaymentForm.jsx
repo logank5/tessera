@@ -6,7 +6,7 @@ import { Box, Button, FormControl, FormLabel, Text, useColorModeValue, Input } f
 // Get your key from your dashboard
 const stripePromise = loadStripe('pk_test_51Plv6eLfDopPrsc2M3jHifDQh48DpxIyR3MYcsu8mucMEAXqS8gKsNE7hS9lAyVVUwBDdIkQmUSg2bXq29wt6oEE00cef0ugpL');
 
-const CheckoutForm = ({ totalAmount, user_id, id  }) => {
+const CheckoutForm = ({ totalAmount, user_id, id }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [paymentSuccess, setPaymentSuccess] = useState(false);
@@ -14,7 +14,8 @@ const CheckoutForm = ({ totalAmount, user_id, id  }) => {
   const bg = useColorModeValue('blue.500', 'blue.400')
   const bgGrey = useColorModeValue('gray.500', 'lightgrey')
   const color = useColorModeValue('white', 'gray.800')
-  
+  const [email, setEmail] = useState('')
+
 
   async function checkout() {
     fetch(`http://localhost:5000/inventory/buy/${user_id}`, {
@@ -24,7 +25,8 @@ const CheckoutForm = ({ totalAmount, user_id, id  }) => {
       },
       body: JSON.stringify(
         {
-          event_id: id
+          event_id: id,
+          to_email: email
         }
       ),
       credentials: 'include'
@@ -80,7 +82,10 @@ const CheckoutForm = ({ totalAmount, user_id, id  }) => {
       </FormControl>
       <FormControl>
         <FormLabel>Card Details</FormLabel>
-        <CardElement mb='15px'/>
+        <Input value={email}
+          onChange={e => setEmail(e.target.value)}
+          placeholder="Send Email" color={bg}></Input>
+        <CardElement mb='15px' />
       </FormControl>
       <Button mt={4} colorScheme="blue" bg={bg} type="submit" disabled={!stripe}>
         Pay
@@ -91,7 +96,7 @@ const CheckoutForm = ({ totalAmount, user_id, id  }) => {
   );
 };
 
-const PaymentForm = ({ totalAmount, user_id, id  }) => (
+const PaymentForm = ({ totalAmount, user_id, id }) => (
   <Elements stripe={stripePromise}>
     <CheckoutForm totalAmount={totalAmount} user_id={user_id} id={id} />
   </Elements>

@@ -11472,9 +11472,9 @@ postcss-selector-parser@^5.0.0-rc.4:
     uniq "^1.0.1"
 
 postcss-selector-parser@^6.0.0, postcss-selector-parser@^6.0.2:
-  version "6.1.1"
-  resolved "https://registry.npmjs.org/postcss-selector-parser/-/postcss-selector-parser-6.1.1.tgz"
-  integrity sha512-b4dlw/9V8A71rLIDsSwVmak9z2DuBUB7CA1/wSdelNEzqsjoSPeADTWNO09lpH49Diy3/JIZ2bSPB1dI3LJCHg==
+  version "6.1.2"
+  resolved "https://registry.npmjs.org/postcss-selector-parser/-/postcss-selector-parser-6.1.2.tgz"
+  integrity sha512-Q8qQfPiZ+THO/3ZrOrO0cJJKfpYCagtMUkXbnEfmgUjwXg6z/WBeOyS9APBBPCTSiDV+s4SwQGu8yFsiMRIudg==
   dependencies:
     cssesc "^3.0.0"
     util-deprecate "^1.0.2"
@@ -14052,7 +14052,7 @@ terser@^5.3.4:
 
 "tessera-seat-picker@git://github.com/muhammadtalhas/tessera-seat-picker":
   version "1.0.0"
-  resolved "git+ssh://git@github.com/muhammadtalhas/tessera-seat-picker.git#ffa9176d16d70d7d5a3985ba037e8c979ed0540c"
+  resolved "git+ssh://git@github.com/muhammadtalhas/tessera-seat-picker.git#4cb8ee5615abd0b8d223f25a69cfda0c3c015278"
   dependencies:
     react "18.0.0"
     react-devtools "4.24.4"

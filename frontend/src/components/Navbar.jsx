@@ -8,8 +8,8 @@ import { useEffect, useState } from 'react';
 import tesseralogo from '../assets/tesseralogo.png';
 import tesseralogo2 from '../assets/tesseralogo2.png';
 import { FaUserCircle } from "react-icons/fa";
-import AvatarMenu from './AvatarMenu';
 import AvatarLoggedIn from './AvatarLoggedIn';
+import AvatarLoggedOut from './AvatarLoggedOut';
 
 function Navbar() {
   const bg = useColorModeValue('blue.500', 'blue.400')
@@ -76,7 +76,7 @@ function Navbar() {
         </Box>
         <Box>
           {loggedIn == true ?
-            <AvatarMenu
+            <AvatarLoggedIn
               key={user.user_id}
               user_id={user.user_id}
               firstname={user.firstname}
@@ -86,7 +86,7 @@ function Navbar() {
               avatar={user.avatar}
               phone={user.phone}
             />
-            : <AvatarLoggedIn />}
+            : <AvatarLoggedOut />}
 
         </Box>
       </Flex>

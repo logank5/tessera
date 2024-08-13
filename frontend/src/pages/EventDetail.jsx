@@ -4,6 +4,7 @@ import { Box } from '@chakra-ui/react'
 import { useEffect, useState } from 'react';
 import DetailGrid from '../components/DetailGrid';
 import { useNavigate } from 'react-router-dom';
+import NewEventDetails from '../components/NewEventDetails';
 
 function EventDetail() {
   const { id } = useParams();
@@ -40,7 +41,7 @@ function EventDetail() {
     <Box align='stretch'>
       {
         event ?
-          <DetailGrid
+          <NewEventDetails
             key={event.event_id}
             id={event.event_id}
             name={event.name}
