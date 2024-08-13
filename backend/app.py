@@ -767,11 +767,10 @@ def buy_seat(user_id):
         for seat in seats:
             seat_ids.append(seat['row_name'] + str(seat['seat_number']))
         print(seat_values[0][2])
-        cursor.execute('SELECT from Events WHERE event_id = ?', (event_id))
+        cursor.execute('SELECT name from Events WHERE event_id = ?', (int(event_id),))
         event_name = cursor.fetchone()
-        print(event_name)
         
-        send_email(to_email, seat_ids, event_name)
+        send_email(to_email, seat_ids, event_name[0])
 
         cursor.execute('UPDATE Tickets SET status = ?, purchase_date = ? WHERE status = ? AND user_id = ? AND event_id = ?', ('SOLD', date, 'RESERVED', user_id, event_id,))
         conn.commit()  # Commit the changes to the database
@@ -906,9 +905,15 @@ def send_email(to_email, seats, name):
     msg['To'] = 'lkemprow@gmail.com'
     msg['Subject'] = 'Tessera: Ticket Purchase Complete for ' + name
     body='Thank you for your purchase! Seats purchased:' + seat_list
+    html_content = f"""
+    <h1>Thank you for your purchase!</h1>
+    <p>You have successfully purchased tickets for the following seats:</p>
+    <p>{seat_list}</p>
+    <p>Please bring this email to the event as your ticket confirmation.</p>
+    """
 
     # Attach the email body
-    msg.attach(MIMEText(body, 'plain'))
+    msg.attach(MIMEText(html_content, 'html'))
 
     try:
         # Connect to the Gmail SMTP server
