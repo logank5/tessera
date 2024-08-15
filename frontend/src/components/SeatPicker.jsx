@@ -86,11 +86,13 @@ function SeatPicker({ user_id, event_id, getData, getId }) {
         console.log(number)
         console.log(id)
 
+        const updateTooltipValue = 'Added to cart'
+        addCb(row, number, id, updateTooltipValue)
+
         adding = true
         getData(row, number, adding)
         setSelected((prevItems) => [...prevItems, id])
-        const updateTooltipValue = 'Added to cart'
-        addCb(row, number, id, updateTooltipValue)
+        
         setLoading(false)
       })
 
