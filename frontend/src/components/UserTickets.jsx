@@ -38,8 +38,8 @@ function UserTickets({ id }) {
 
     return (
         <Box>
-            <Center height='60vh'>
-                <Card rounded='5px' boxShadow={'5px'} p='20px'>
+            <Center>
+                <Card mt='50px' rounded='5px' boxShadow={'5px'} p='20px'>
                     <Flex>
                         <IoTicket size='35px' />
                         <Spacer />
@@ -49,18 +49,17 @@ function UserTickets({ id }) {
                         <Spacer />
                         <IoTicket size='35px' />
                     </Flex>
-                    <VStack>
 
-
-                        <Spacer />
+                    <Box overflowY="auto" maxHeight="600px">
                         <TableContainer>
                             <Table variant='striped' colorScheme='blue'>
                                 <Thead>
                                     <Tr>
-                                        <Th color={color} fontWeight='bold'>Event</Th>
-                                        <Th fontWeight='bold'>Event Date</Th>
-                                        <Th fontWeight='bold'>Row Name</Th>
-                                        <Th fontWeight='bold'>Seat Number</Th>
+                                        <Th fontSize='15px' fontWeight='bold'>Event</Th>
+                                        <Th fontSize='15px' fontWeight='bold'>Event Date</Th>
+                                        <Th fontSize='15px' fontWeight='bold'>Row Name</Th>
+                                        <Th fontSize='15px' fontWeight='bold'>Seat Number</Th>
+                                        <Th fontSize='15px' fontWeight='bold'>Purchase Date</Th>
                                     </Tr>
                                 </Thead>
                                 <Tbody>
@@ -70,12 +69,13 @@ function UserTickets({ id }) {
                                             event_id={ticket.event_id}
                                             row={ticket.row_name}
                                             number={ticket.seat_number}
+                                            date={ticket.purchase_date}
                                         />
                                     ))}
                                 </Tbody>
                             </Table>
                         </TableContainer>
-                    </VStack>
+                        </Box>
                 </Card>
             </Center>
         </Box>

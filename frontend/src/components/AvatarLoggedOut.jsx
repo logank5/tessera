@@ -4,6 +4,7 @@ import { Menu, MenuButton, MenuList, MenuGroup, MenuItem, MenuDivider, MenuOptio
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { FaUserCircle } from "react-icons/fa";
+import "../styles.css";
 
 function AvatarLoggedOut({ loggedIn, firstname, lastname, email, avatar, username }) {
   const bg = useColorModeValue('blue.500', 'blue.400')
@@ -13,7 +14,7 @@ function AvatarLoggedOut({ loggedIn, firstname, lastname, email, avatar, usernam
   const navigate = useNavigate();
 
   return (
-    <Menu>
+    <Menu className="menu">
 
       <MenuButton alignItems='center' p='5px'>
         <Center>

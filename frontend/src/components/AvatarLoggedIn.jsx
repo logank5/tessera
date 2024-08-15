@@ -4,6 +4,7 @@ import { Menu, MenuButton, MenuList, MenuGroup, MenuItem, MenuDivider, MenuOptio
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { FaUserCircle } from "react-icons/fa";
+import "../styles.css";
 
 function AvatarLoggedIn({ firstname, lastname, email, avatar, username }) {
   const bg = useColorModeValue('blue.500', 'blue.400')
@@ -33,7 +34,7 @@ function AvatarLoggedIn({ firstname, lastname, email, avatar, username }) {
 
 
   return (
-    <Menu>
+    <Menu className="menu">
 
       <MenuButton alignItems='center' >
         {/* <FaUserCircle size='40px'/> */}
@@ -44,7 +45,7 @@ function AvatarLoggedIn({ firstname, lastname, email, avatar, username }) {
 
 
       </MenuButton>
-      <MenuList colorScheme='blue' color={bg}>
+      <MenuList colorScheme='blue' color={bg} >
         <MenuGroup title='My Profile'>
           <MenuItem as={Link} to={`/account`}>My Account</MenuItem>
         </MenuGroup>

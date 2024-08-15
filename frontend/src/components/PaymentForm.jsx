@@ -84,14 +84,14 @@ const CheckoutForm = ({ totalAmount, user_id, id }) => {
         <FormLabel>Card Details</FormLabel>
         <Input value={email}
           onChange={e => setEmail(e.target.value)}
-          placeholder="Send Email" color={bg}></Input>
+          placeholder="Send Email" color={bg} mb='15px'></Input>
         <CardElement mb='15px' />
       </FormControl>
       <Button mt={4} colorScheme="blue" bg={bg} type="submit" disabled={!stripe}>
         Pay
       </Button>
       {paymentSuccess && <Text mt={4} color="green.500">Payment Successful!</Text>}
-      {error && <Text mt={4} color="red.500">{error}</Text>}
+      {error && <Text mt={4} color="red.500">Failed Purchase</Text>}
     </Box>
   );
 };

@@ -1,0 +1,66 @@
+.custom-stage {
+    background-color: darkblue;
+    width: 50%;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.seat {
+    width: 75px !important;
+    height: 75px !important;
+    font-style: bold !important;
+}
+
+.seat__number {
+    font-size: 15px !important;
+    font-style: bold !important;
+}
+
+.seat-picker__row--enabled:hover {
+    background-color: transparent !important;
+}
+
+.seat-picker__row--selected {
+    background-color: transparent !important;
+}
+* {
+    font-family: sans-serif;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    list-style: none;
+    text-decoration: none;
+  }
+  
+  
+  .navbar .brand a {
+    color: #ffffff;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+  }
+  
+  .navbar .nav {
+    display: flex;
+
+  }
+  
+  .sticky {
+    position: fixed;
+    top: 50;
+    padding-top: 15px;
+    width: 100%;
+    z-index: 1;
+  }
+  
+  .sticky + .content {
+    padding-top: 70px;
+  }
+  
+  .menu {
+    z-index: 1;
+  }
+
+  .checkout {
+    z-index: 1;
+  }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, TableContainer, Tr, Td, Tbody, Thead, Th } from '@chakra-ui/react';
 
-function TicketsTable({ event_id, row, number }) {
+function TicketsTable({ event_id, row, number, date }) {
     const [event, setEvent] = useState([]);
     
 
@@ -25,6 +25,7 @@ function TicketsTable({ event_id, row, number }) {
             <Td>{event.date}</Td>
             <Td>{row}</Td>
             <Td>{number}</Td>
+            <Td>{date}</Td>
         </Tr>
 
     );

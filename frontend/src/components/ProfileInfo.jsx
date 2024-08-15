@@ -30,9 +30,8 @@ function ProfileInfo({ firstname, lastname, username, email, avatar, phone }) {
     }
 
     return (
-        <Box
-        >
-            <Center height='60vh'>
+        <Box >
+            <Center height='59vh' mt='3px'>
                 <Card rounded='5px' boxShadow={'5px'} width='30%' bg={color} p='20px'>
                     <VStack>
                         <Heading>

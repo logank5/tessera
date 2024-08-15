@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import TesseraSeatPicker from 'tessera-seat-picker';
-import { Button, VStack, Stack } from '@chakra-ui/react';
+import { Box, useColorModeValue } from '@chakra-ui/react';
+import '../styles.css';
 
 function SeatPicker({ user_id, event_id, getData, getId }) {
   const [seats, setSeats] = useState([]);
   const [rowsMap, setRowsMap] = useState([]);
   const [selected, setSelected] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isReserved, setIsReserved] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0.0);
   let adding = true;
+  const bg = useColorModeValue('blue.500', 'blue.400')
+  const bgGrey = useColorModeValue('gray.500', 'lightgrey')
+  const color = useColorModeValue('white', 'gray.800')
+  const flip = useColorModeValue('gray.800', 'white')
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,26 +68,34 @@ function SeatPicker({ user_id, event_id, getData, getId }) {
 
   const addSeatCallback = async ({ row, number, id }, addCb) => {
     setLoading(true);
+    fetch(`http://localhost:5000/inventory/reserve/${user_id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(
+        {
+          row_name: row,
+          seat_number: number,
+          event_id: event_id,
+        }
+      ),
+    })
+      .then(x => {
+        console.log(row)
+        console.log(number)
+        console.log(id)
 
-    try {
-      reserveSeat(row, number)
-      adding = true
-      getData(row, number, adding)
-      getId(row, number, adding)
-
-      setSelected((prevItems) => [...prevItems, id]);
-      const updateTooltipValue = 'Added to cart';
-
-      // Important to call this function if the seat was successfully selected - it helps update the screen
-      addCb(row, number, id, updateTooltipValue);
+        adding = true
+        getData(row, number, adding)
+        setSelected((prevItems) => [...prevItems, id])
+        const updateTooltipValue = 'Added to cart'
+        addCb(row, number, id, updateTooltipValue)
+        setLoading(false)
+      })
 
 
-    } catch (error) {
-      // Handle any errors here
-      console.error('Error adding seat:', error);
-    } finally {
-      setLoading(false);
-    }
+      .catch(error => console.error('Reserve Failed:', error));
   };
 
   async function reserveSeat(row, number) {
@@ -98,29 +112,43 @@ function SeatPicker({ user_id, event_id, getData, getId }) {
         }
       ),
     })
+      .then(x => {
+        adding = true
+        getData(row, number, adding)
+        setSelected((prevItems) => [...prevItems, id])
+        const updateTooltipValue = 'Added to cart'
+        addCb(row, number, id, updateTooltipValue)
+      })
+
 
       .catch(error => console.error('Reserve Failed:', error));
-    setIsReserved(true);
   }
 
   const removeSeatCallback = async ({ row, number, id }, removeCb) => {
     setLoading(true);
-    try {
-      // Your custom logic to remove the seat goes here...
-      unreserveSeat(row, number)
-      adding = false
-      getData(row, number, adding)
-      getId(row, number, adding)
+    fetch(`http://localhost:5000/inventory/unreserve`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(
+        {
+          row_name: row,
+          seat_number: number,
+          event_id: event_id,
+        }
+      ),
+    })
+      .then(x => {
+        adding = false
+        getData(row, number, adding)
+        setSelected((list) => list.filter((item) => item !== id));
+        removeCb(row, number);
+        setLoading(false);
+      })
+      // .then(getId(row, number, adding))
 
-      setSelected((list) => list.filter((item) => item !== id));
-      removeCb(row, number);
-    } catch (error) {
-      // Handle any errors here
-      console.error('Error removing seat:', error);
-    } finally {
-      setLoading(false);
-
-    }
+      .catch(error => console.error('Reserve Failed:', error));
   };
 
   async function unreserveSeat(row, number) {
@@ -137,13 +165,21 @@ function SeatPicker({ user_id, event_id, getData, getId }) {
         }
       ),
     })
-      .then(setIsReserved(false))
+      .then(x => {
+        adding = false
+        getData(row, number, adding)
+        setSelected((list) => list.filter((item) => item !== id));
+        removeCb(row, number);
+        setLoading(false);
+      })
+      // .then(getId(row, number, adding))
+
       .catch(error => console.error('Reserve Failed:', error));
-    
+
   }
 
   return (
-    <div>
+    <Box minW={{ base: "100%", md: "500px" }} minH={{ base: "100%", md: "500px" }}>
       {loading ? (
         <h2>Loading...</h2>
       ) : (
@@ -155,9 +191,12 @@ function SeatPicker({ user_id, event_id, getData, getId }) {
           alpha
           visible
           loading={loading}
+          seatStyle={{ backgroundColor: 'yellow', color: flip }}
+          stageStyle={{ backgroundColor: 'gray' }}
+          stageClassName="custom-stage"
         />
       )}
-    </div>
+    </Box>
   );
 }
 

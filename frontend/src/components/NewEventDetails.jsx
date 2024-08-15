@@ -1,5 +1,5 @@
-import { VStack, Heading, TabIndicator, Box, Card, Button, Center, Text, Flex, useColorModeValue, Spacer } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react';
+import { VStack, Heading, Image, Box, Card, Button, Center, Text, Flex, useColorModeValue, Spacer, Divider } from '@chakra-ui/react'
+import React, { useEffect, useState, useRef } from 'react';
 import { SlArrowRight } from "react-icons/sl";
 import SeatPicker from './SeatPicker';
 import { FaShoppingCart } from "react-icons/fa";
@@ -15,9 +15,12 @@ import {
     ModalCloseButton,
 } from '@chakra-ui/react'
 import { useDisclosure } from '@chakra-ui/react';
-import { TabList, Tabs, Tab, TabPanels, TabPanel } from '@chakra-ui/react'
+import { Grid, GridItem, Tab, TabPanels, TabPanel } from '@chakra-ui/react'
 import AboutEvents from './AboutEvents';
 import { Table, TableContainer, Tr, Td, Tbody, Thead, Th } from '@chakra-ui/react';
+import ReservedRow from './ReservedRow';
+import "../styles.css";
+
 
 
 function NewEventDetails({ id, name, date, time, location, imageUrl, description }) {
@@ -30,17 +33,35 @@ function NewEventDetails({ id, name, date, time, location, imageUrl, description
     const navigate = useNavigate();
     const { isOpen, onOpen, onClose } = useDisclosure()
     const seatIds = []
+    const [seats, setSeats] = useState([])
+    const sectionRef = useRef(null);
+    const seatRef = useRef(null);
+    const [scrolling, setScrolling] = useState(false);
+    let currPrice;
 
-    async function getID(row, number, adding) {
-        let seatId = row + str(number)
+    const handleScroll = () => {
+        if (window.pageYOffset >= 395) {
+            setScrolling(true);
+        } else {
+            setScrolling(false);
+        }
+    };
+    useEffect(() => {
+        window.addEventListener("scroll", handleScroll);
+        return () => window.addEventListener("scroll", handleScroll);
+    });
+
+    async function getID(row, number, adding, price) {
+        let seatId = row + number + '$' + price
         if (adding == true) {
-            seatIds.append(seatId)
+            setSeats(seats => [...seats, seatId])
         }
         if (adding == false) {
-            seatIds.remove(seatId)
+            setSeats(prev => prev.filter(seat => seat != seatId))
         }
-        return seatId
+
     }
+
 
     async function getPrice(row, number, adding) {
         fetch(`http://localhost:5000/tickets/price/${id}/${row}/${number}`, {
@@ -48,7 +69,6 @@ function NewEventDetails({ id, name, date, time, location, imageUrl, description
             headers: {
                 'Content-Type': 'application/json',
             },
-
         })
             .then(response => response.json())
             .then(price => {
@@ -58,6 +78,7 @@ function NewEventDetails({ id, name, date, time, location, imageUrl, description
                 if (adding == false) {
                     setTotalPrice(totalPrice - price)
                 }
+                getID(row, number, adding, price)
             })
             .catch(error => console.error('Error fetching seat price:', error));
     }
@@ -71,119 +92,121 @@ function NewEventDetails({ id, name, date, time, location, imageUrl, description
             .catch(error => console.error('Error fetching user:', error));
     }, []);
 
-    async function check() {
-        navigate(`/checkout`)
-    }
-
-
-
     return (
 
         <VStack mt='80px' align='stretch'>
+
             <Box height='40vh' bg='blue' width='stretch' bgImage={imageUrl}
                 backgroundPosition="left"
                 backgroundRepeat='no-repeat'
                 backgroundSize='cover'
+                className="header flex"
             >
-                <Heading color='white' mt='30vh' ml='100px' textShadow={`0 0 20px blue`}>
-                    {name}
-                </Heading>
+
             </Box>
-            <Box bg={color} pl='100px' boxShadow="lg" height='45px'>
-                <Tabs variant='unstyled' align='baseline'>
-                    <TabList>
-                        <Tab color={bg} fontWeight='bold'>
-                            About
-                        </Tab>
-                        <Tab color={bg} fontWeight='bold'>
-                            Purchase Tickets
-                        </Tab>
-                    </TabList>
-                    <TabIndicator height='5px' bg={bg} borderRadius='1px' />
-                    <TabPanels>
-                        <TabPanel>
-                            <AboutEvents
-                                id={id}
-                                name={name}
-                                date={date}
-                                time={time}
-                                description={description}
-                                location={location}
-                                imageUrl={imageUrl} />
-                        </TabPanel>
-
-                        <TabPanel>
-                            <Flex>
-                                <Center p='100px'>
-                                    {
-                                        user ?
-                                            <SeatPicker
-                                                user_id={user.user_id}
-                                                event_id={id}
-                                                getData={getPrice}
-                                                getId={getID}
-                                            />
-                                            : null
-                                    }
-                                </Center>
-
-                                <Spacer></Spacer>
-
-                                <Card height='auto' bg={bg} width='20%'>
-                                    <TableContainer>
-                                        <Table variant='striped' colorScheme='blue'>
-                                            <Thead>
-                                                <Tr>
-                                                    <Th fontWeight='bold'>Tickets</Th>
-                                                </Tr>
-                                            </Thead>
-                                            <Tbody>
-                                            {seatIds.map(id => (
-                                        <tr
-                                            key={getID}
-                                            
-                                            row={ticket.row_name}
-                                            number={ticket.seat_number}
-                                        />
-                                    ))}
-                                            </Tbody>
-                                        </Table>
-                                    </TableContainer>
-
-                                    <Button position='absolute' bottom="20%" onClick={onOpen} fontSize={'18'} rightIcon={<FaShoppingCart />} mt={'1'} colorScheme='blue' >
-                                        ${totalPrice}
-                                    </Button>
-                                    <Modal isOpen={isOpen} onClose={onClose}>
-                                        <ModalOverlay />
-                                        <ModalContent>
-                                            <ModalHeader>Checkout</ModalHeader>
-                                            {
-                                                user ?
-                                                    <PaymentForm totalAmount={totalPrice} user_id={user.user_id} id={id} />
-                                                    : null
-                                            }
-                                        </ModalContent>
-                                    </Modal>
-                                </Card>
-
-                            </Flex>
-
-
-                        </TabPanel>
-
-                        <TabPanel>
-
-                        </TabPanel>
-
-                        <TabPanel>
-
-                        </TabPanel>
-
-                    </TabPanels>
-                </Tabs>
+            <Box bg='gray.800' opacity='65%' position='absolute' top='0%' mt='80px' width='stretch' />
+            <Heading color='white' ml='100px' position='absolute' top='15%' textShadow={`0 0 20px blue`}>
+                {name}
+            </Heading>
+            <Box ref={sectionRef}></Box>
+            <Box className={scrolling ? "sticky" : ""} id="navbar" boxShadow="xl" bg={color}>
+                <Flex pl='15px' pr='15px' pt='5px' pb='15px'>
+                    <Button borderweight='1px' borderColor={flip} bg={bg} mr='15px' color={color} onClick={() =>
+                        window.scrollTo({
+                            top: sectionRef.current.offsetTop,
+                            behavior: "smooth"
+                        })}>About</Button>
+                    <Button bg={bg} color={color} onClick={() =>
+                        window.scrollTo({
+                            top: seatRef.current.offsetTop,
+                            behavior: "smooth"
+                        })}>Purchase Tickets</Button>
+                </Flex>
             </Box>
+            <Divider orientation='horizontal' alignSelf='center' borderColor={bg} mt='40px' mb='30px' width='170vh' className="content" />
+            <Grid
+                templateAreas=
+                {`          "title title"
+                            "about image"
+                            "spacer spacer"
+                            "header header"
+                            "map tickets"
+                            "map button"`}
+                gridTemplateColumns={'1fr 650px'}
+                gap='3'
+                color={flip}
+                fontWeight='bold'
+                m='15px'
 
+            >
+                <GridItem borderWidth='1px' rounded='md' area={'title'} bg='transparent' p='15px'>
+                    <Heading >About Event</Heading>
+                </GridItem>
+                <GridItem rounded='md' area={'about'} bg='transparent' p='15px'>
+                    <AboutEvents
+                        id={id}
+                        name={name}
+                        date={date}
+                        time={time}
+                        description={description}
+                        location={location}
+                        imageUrl={imageUrl} />
+                </GridItem>
+                <GridItem rounded='md' area={'image'} bg='transparent' p='30px'>
+                    <Image width='600px' height='600px' src={imageUrl}></Image>
+                </GridItem>
+                <GridItem rounded='md' area={'spacer'} bg='transparent' p='15px'>
+                    <Divider orientation='horizontal' alignSelf='center' borderColor={bg} mt='50px' mb='30px' width='170vh' className="content" />
+                </GridItem>
+                <GridItem borderWidth='3px' rounded='md' area={'header'} bg='transparent' p='15px'>
+                    <Heading ref={seatRef}>Purchase Seats</Heading>
+                </GridItem>
+                <GridItem rounded='md' area={'map'} bg='transparent' p='15px' >
+                    <Center p='50px'>
+                        {
+                            user ?
+                                <SeatPicker
+                                    user_id={user.user_id}
+                                    event_id={id}
+                                    getData={getPrice}
+                                // getId={getID}
+                                />
+                                : null
+                        }
+                    </Center>
+                </GridItem>
+                <GridItem borderWidth='1px' rounded='md' area={'tickets'} bg={bgGrey} m='15px' mt='90px' mr='100px'>
+                    <Card>
+                        {seats.map(seat => (
+                            <ReservedRow
+                                key={seat}
+                                id={seat}
+                            />
+                        ))}
+
+
+
+                        <Button m='15px' onClick={onOpen} fontSize={'18'} rightIcon={<FaShoppingCart />} colorScheme='blue' bg={bg} borderWidth='1px' borderColor={color}>
+                            Checkout: ${totalPrice}
+                        </Button>
+                        <Modal isOpen={isOpen} onClose={onClose} className="checkout">
+                            <ModalOverlay />
+                            <ModalContent>
+                                <ModalHeader>Checkout</ModalHeader>
+                                {
+                                    user ?
+                                        <PaymentForm totalAmount={totalPrice} user_id={user.user_id} id={id} />
+                                        : null
+                                }
+                            </ModalContent>
+                        </Modal>
+                    </Card>
+                </GridItem>
+            </Grid>
+            <Spacer mt='80px'></Spacer>
         </VStack>
+
+
 
 
     );

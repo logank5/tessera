@@ -141,3 +141,87 @@ function DetailGrid({ id, name, date, time, location, imageUrl, description }) {
 }
 
 export default DetailGrid;
+
+
+{/* <Tabs variant='unstyled' align='baseline'>
+                <TabList>
+                    <Tab color={bg} fontWeight='bold'>
+                        About
+                    </Tab>
+                    <Tab color={bg} fontWeight='bold'>
+                        Purchase Tickets
+                    </Tab>
+                </TabList>
+                <TabIndicator height='5px' bg={bg} borderRadius='1px' />
+                <TabPanels>
+                    <TabPanel>
+                        <AboutEvents
+                            id={id}
+                            name={name}
+                            date={date}
+                            time={time}
+                            description={description}
+                            location={location}
+                            imageUrl={imageUrl} />
+                    </TabPanel>
+
+                    <TabPanel>
+                        <Flex>
+                            <Center p='100px'>
+                                {
+                                    user ?
+                                        <SeatPicker
+                                            user_id={user.user_id}
+                                            event_id={id}
+                                            getData={getPrice}
+                                            getId={getID}
+                                        />
+                                        : null
+                                }
+                            </Center>
+
+                            <Spacer></Spacer>
+
+                            <Card height='auto' bg={bg} width='20%'>
+                                <TableContainer>
+                                    <Table variant='striped' colorScheme='blue'>
+                                        <Thead>
+                                            <Tr>
+                                                <Th fontWeight='bold'>Tickets</Th>
+                                            </Tr>
+                                        </Thead>
+                                        <Tbody>
+                                            {seats.map(seat => (
+                                                <ReservedRow
+                                                    key={seat.seat}
+                                                    id={seat.seat}
+                                                />
+                                            ))}
+
+                                        </Tbody>
+                                    </Table>
+                                </TableContainer>
+
+                                <Button position='absolute' bottom="20%" onClick={onOpen} fontSize={'18'} rightIcon={<FaShoppingCart />} mt={'1'} colorScheme='blue' >
+                                    ${totalPrice}
+                                </Button>
+                                <Modal isOpen={isOpen} onClose={onClose}>
+                                    <ModalOverlay />
+                                    <ModalContent>
+                                        <ModalHeader>Checkout</ModalHeader>
+                                        {
+                                            user ?
+                                                <PaymentForm totalAmount={totalPrice} user_id={user.user_id} id={id} />
+                                                : null
+                                        }
+                                    </ModalContent>
+                                </Modal>
+                            </Card>
+
+                        </Flex>
+
+
+                    </TabPanel>
+
+                </TabPanels>
+            </Tabs> */}

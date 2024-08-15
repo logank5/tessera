@@ -38,7 +38,7 @@ function EventDetail() {
   }, []);
 
   return (
-    <Box align='stretch'>
+    <Box>
       {
         event ?
           <NewEventDetails

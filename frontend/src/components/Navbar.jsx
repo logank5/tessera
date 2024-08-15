@@ -10,6 +10,7 @@ import tesseralogo2 from '../assets/tesseralogo2.png';
 import { FaUserCircle } from "react-icons/fa";
 import AvatarLoggedIn from './AvatarLoggedIn';
 import AvatarLoggedOut from './AvatarLoggedOut';
+import "../styles.css"
 
 function Navbar() {
   const bg = useColorModeValue('blue.500', 'blue.400')
@@ -74,7 +75,7 @@ function Navbar() {
         <Box mr={25}>
           <ColorModeSwitch />
         </Box>
-        <Box>
+        <Box className="main">
           {loggedIn == true ?
             <AvatarLoggedIn
               key={user.user_id}

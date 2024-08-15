@@ -724,7 +724,7 @@ def reserve_seat(user_id):
             
             # t = threading.Timer(10, unreserve_seat)
             # t.start()
-            countdown()
+            # countdown()
             conn.close()
             return jsonify({'message': 'Seat reservation successful'}), 200
         else:
@@ -751,13 +751,14 @@ def buy_seat(user_id):
         return jsonify({'error': 'A field (event_id, to_email) is required.'}), 400
 
     try:
-        # if not to_email:
-        #     cursor.execute('SELECT email from Users WHERE user_id = ?', (user_id,))
-        #     to_email=cursor.fetchone()
-        print(to_email)
 
         conn = get_db_connection()
         cursor = conn.cursor()
+
+        if not to_email:
+            cursor.execute('SELECT email from Users WHERE user_id = ?', (user_id,))
+            to_email=cursor.fetchone()
+        print(to_email)
 
         date = datetime.today().strftime('%Y-%m-%d')
 
@@ -767,10 +768,10 @@ def buy_seat(user_id):
         for seat in seats:
             seat_ids.append(seat['row_name'] + str(seat['seat_number']))
         print(seat_values[0][2])
-        cursor.execute('SELECT name from Events WHERE event_id = ?', (int(event_id),))
-        event_name = cursor.fetchone()
+        cursor.execute('SELECT name, url from Events WHERE event_id = ?', (int(event_id),))
+        event_details = cursor.fetchone()
         
-        send_email(to_email, seat_ids, event_name[0])
+        send_email(to_email, seat_ids, event_details[0], event_details[1])
 
         cursor.execute('UPDATE Tickets SET status = ?, purchase_date = ? WHERE status = ? AND user_id = ? AND event_id = ?', ('SOLD', date, 'RESERVED', user_id, event_id,))
         conn.commit()  # Commit the changes to the database
@@ -893,16 +894,16 @@ def get_event_details(event_id):
     except Exception as e:
         return jsonify(error=str(e)), 500
     
-def send_email(to_email, seats, name):
+def send_email(to_email, seats, name, image):
     # Gmail account credentials
     from_email = 'lkemprow@gmail.com'
-    from_password = 'mumy bmvp nfwj rwqa'  
+    from_password = ''  
     seat_list = ', '.join(seats)
 
     # Setup the MIME
     msg = MIMEMultipart()
     msg['From'] = from_email
-    msg['To'] = 'lkemprow@gmail.com'
+    msg['To'] = to_email
     msg['Subject'] = 'Tessera: Ticket Purchase Complete for ' + name
     body='Thank you for your purchase! Seats purchased:' + seat_list
     html_content = f"""
@@ -910,6 +911,7 @@ def send_email(to_email, seats, name):
     <p>You have successfully purchased tickets for the following seats:</p>
     <p>{seat_list}</p>
     <p>Please bring this email to the event as your ticket confirmation.</p>
+    <img src={image} alt="Event Image">
     """
 
     # Attach the email body
