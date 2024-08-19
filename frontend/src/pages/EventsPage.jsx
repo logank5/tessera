@@ -27,36 +27,30 @@ function EventsPage() {
   const [location, setLocation] = React.useState('')
   const [afterDate, setAfterDate] = React.useState('')
   const [beforeDate, setBeforeDate] = React.useState('')
+  const [genre, setGenre] = React.useState('')
 
 
-  function handleDataFilter(name, beforeDate, afterDate, location) {
+  function handleDataFilter(name, beforeDate, afterDate, location, genre) {
     setName(name);
     setLocation(location);
     setAfterDate(afterDate);
     setBeforeDate(beforeDate);
+    setGenre(genre);
   }
-
-  var params = new URLSearchParams({
-    'afterDate': '',
-    'beforeDate': '',
-    'location': '',
-  });
-
-  // location=${location}&afterDate=${date}
 
 
   useEffect(() => {
-    fetch(`http://localhost:5000/events?location=${location}&afterDate=${afterDate}&beforeDate=${beforeDate}&name=${name}`)
+    fetch(`http://localhost:5000/events?location=${location}&afterDate=${afterDate}&beforeDate=${beforeDate}&name=${name}&genre=${genre}`)
       .then(response => response.json())
       .then(setEvents)
       .catch(error => console.error('Error fetching events:', error));
-  }, [name, location, afterDate, beforeDate]);
-
+  }, [name, location, afterDate, beforeDate, genre]);
 
   return (
     <>
       {/* Add the sidebar with filter */}
       <Filter sendDataToParent={handleDataFilter} />
+      
 
       {/* Add all the event cards */}
       <Container maxW="container.xl" centerContent>

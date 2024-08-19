@@ -69,6 +69,11 @@ def get_events():
     if name:
         query_conditions.append('name = ?')
         params.append(name)
+    
+    genre = request.args.get('genre')
+    if genre:
+        query_conditions.append('genre = ?')
+        params.append(genre)
 
   # Add WHERE clause if conditions are present
     if query_conditions:
@@ -560,16 +565,15 @@ def get_events_details(eventId):
     # Start with the base SQL query
     cursor.execute('SELECT * FROM Events WHERE event_id = ?', (eventId,))
     
-    # Execute the query with or without the date filter
     details = cursor.fetchall()
     
-    # Convert the rows to dictionaries to make them serializable
     detail_list = [dict(detail) for detail in details]
     
     conn.close()
 
     return jsonify(detail_list)
 
+#Get the user info for whoever is logged in
 @app.route('/user/logged', methods=['GET']) 
 @jwt_required()
 def get_user_details():
@@ -580,13 +584,10 @@ def get_user_details():
 
     user_id = jwt['sub']['user_id']
     
-    # Start with the base SQL query
     cursor.execute('SELECT * FROM Users WHERE user_id = ?', (user_id,))
     
-    # Execute the query with or without the date filter
     details = cursor.fetchall()
     
-    # Convert the rows to dictionaries to make them serializable
     detail_list = [dict(detail) for detail in details]
     
     conn.close()

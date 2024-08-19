@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Center, Flex, Divider, VStack, InputRightElement, InputGroup, Image } from '@chakra-ui/react';
 import EventCard from './EventCard';
 import {
-    Drawer,
+    Select,
     DrawerBody,
     DrawerFooter,
     DrawerHeader,
@@ -45,16 +45,18 @@ function Filter({ sendDataToParent }) {
     const [beforeDate, setBeforeDate] = useState('');
     const [location, setLocation] = useState('');
     const [name, setName] = useState('');
+    const [genre, setGenre] = useState('');
 
     function handleClick() {
-        sendDataToParent(name, beforeDate, afterDate, location);
+        sendDataToParent(name, beforeDate, afterDate, location, genre);
     }
     function clear() {
-        sendDataToParent('', '', '', '');
+        sendDataToParent('', '', '', '', '');
         setAfterDate('');
         setBeforeDate('');
         setLocation('');
         setName('');
+        setGenre('');
     }
 
     return (
@@ -75,6 +77,14 @@ function Filter({ sendDataToParent }) {
                     </h2>
                     <AccordionPanel pb={4} ml='150px' mr='150px' alignContent='center'>
                         <HStack>
+                            <Select color={bg} bg={color} value={genre} onChange={e => setGenre(e.target.value)} placeholder='Select Genre'>
+                                <option value='Sports'>Sports</option>
+                                <option value='Concerts'>Concerts</option>
+                                <option value='Theater'>Theater</option>
+                            </Select>
+                            <Center height='50px' p='5px'>
+                                <Divider orientation='vertical' borderColor={flip} />
+                            </Center>
                             {/* Search by name */}
                             <InputGroup>
                                 <InputRightElement

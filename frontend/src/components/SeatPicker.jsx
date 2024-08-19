@@ -86,8 +86,7 @@ function SeatPicker({ user_id, event_id, getData, getId }) {
         console.log(number)
         console.log(id)
 
-        adding = true
-        getData(row, number, adding)
+        getData(row, number, true)
         setSelected((prevItems) => [...prevItems, id])
         const updateTooltipValue = 'Added to cart'
         addCb(row, number, id, updateTooltipValue)
@@ -140,8 +139,7 @@ function SeatPicker({ user_id, event_id, getData, getId }) {
       ),
     })
       .then(x => {
-        adding = false
-        getData(row, number, adding)
+        getData(row, number, false)
         setSelected((list) => list.filter((item) => item !== id));
         removeCb(row, number);
         setLoading(false);
@@ -180,9 +178,7 @@ function SeatPicker({ user_id, event_id, getData, getId }) {
 
   return (
     <Box minW={{ base: "100%", md: "500px" }} minH={{ base: "100%", md: "500px" }}>
-      {loading ? (
-        <h2>Loading...</h2>
-      ) : (
+      
         <TesseraSeatPicker
           addSeatCallback={addSeatCallback}
           removeSeatCallback={removeSeatCallback}
@@ -195,7 +191,7 @@ function SeatPicker({ user_id, event_id, getData, getId }) {
           stageStyle={{ backgroundColor: 'gray' }}
           stageClassName="custom-stage"
         />
-      )}
+      
     </Box>
   );
 }

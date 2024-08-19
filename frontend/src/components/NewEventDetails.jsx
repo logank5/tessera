@@ -1,25 +1,12 @@
 import { VStack, Heading, Image, Box, Card, Button, Center, Text, Flex, useColorModeValue, Spacer, Divider } from '@chakra-ui/react'
 import React, { useEffect, useState, useRef } from 'react';
-import { SlArrowRight } from "react-icons/sl";
 import SeatPicker from './SeatPicker';
-import { FaShoppingCart } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
-import PaymentForm from './PaymentForm';
-import {
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton,
-} from '@chakra-ui/react'
 import { useDisclosure } from '@chakra-ui/react';
 import { Grid, GridItem, Tab, TabPanels, TabPanel } from '@chakra-ui/react'
 import AboutEvents from './AboutEvents';
-import { Table, TableContainer, Tr, Td, Tbody, Thead, Th } from '@chakra-ui/react';
-import ReservedRow from './ReservedRow';
 import "../styles.css";
+import ReservedTickets from './ReservedTickets';
 
 
 
@@ -31,13 +18,10 @@ function NewEventDetails({ id, name, date, time, location, imageUrl, description
     const flip = useColorModeValue('gray.800', 'white')
     const [totalPrice, setTotalPrice] = useState(0.0);
     const navigate = useNavigate();
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    const seatIds = []
     const [seats, setSeats] = useState([])
     const sectionRef = useRef(null);
     const seatRef = useRef(null);
     const [scrolling, setScrolling] = useState(false);
-    let currPrice;
 
     const handleScroll = () => {
         if (window.pageYOffset >= 395) {
@@ -51,6 +35,7 @@ function NewEventDetails({ id, name, date, time, location, imageUrl, description
         return () => window.addEventListener("scroll", handleScroll);
     });
 
+
     async function getID(row, number, adding, price) {
         let seatId = row + number + '$' + price
         if (adding == true) {
@@ -61,7 +46,6 @@ function NewEventDetails({ id, name, date, time, location, imageUrl, description
         }
 
     }
-
 
     async function getPrice(row, number, adding) {
         fetch(`http://localhost:5000/tickets/price/${id}/${row}/${number}`, {
@@ -95,6 +79,7 @@ function NewEventDetails({ id, name, date, time, location, imageUrl, description
     return (
 
         <VStack mt='80px' align='stretch'>
+            <Box height='40vh' opacity='55%' width='stretch' bg='gray.800' position='absolute' top='0%' mt='80px' />
 
             <Box height='40vh' bg='blue' width='stretch' bgImage={imageUrl}
                 backgroundPosition="left"
@@ -102,7 +87,6 @@ function NewEventDetails({ id, name, date, time, location, imageUrl, description
                 backgroundSize='cover'
                 className="header flex"
             >
-
             </Box>
             <Box bg='gray.800' opacity='65%' position='absolute' top='0%' mt='80px' width='stretch' />
             <Heading color='white' ml='100px' position='absolute' top='15%' textShadow={`0 0 20px blue`}>
@@ -169,38 +153,21 @@ function NewEventDetails({ id, name, date, time, location, imageUrl, description
                                     user_id={user.user_id}
                                     event_id={id}
                                     getData={getPrice}
-                                // getId={getID}
                                 />
                                 : null
                         }
                     </Center>
                 </GridItem>
                 <GridItem borderWidth='1px' rounded='md' area={'tickets'} bg={bgGrey} m='15px' mt='90px' mr='100px'>
-                    <Card>
-                        {seats.map(seat => (
-                            <ReservedRow
-                                key={seat}
-                                id={seat}
-                            />
-                        ))}
-
-
-
-                        <Button m='15px' onClick={onOpen} fontSize={'18'} rightIcon={<FaShoppingCart />} colorScheme='blue' bg={bg} borderWidth='1px' borderColor={color}>
-                            Checkout: ${totalPrice}
-                        </Button>
-                        <Modal isOpen={isOpen} onClose={onClose} className="checkout">
-                            <ModalOverlay />
-                            <ModalContent>
-                                <ModalHeader>Checkout</ModalHeader>
-                                {
-                                    user ?
-                                        <PaymentForm totalAmount={totalPrice} user_id={user.user_id} id={id} />
-                                        : null
-                                }
-                            </ModalContent>
-                        </Modal>
-                    </Card>
+                    {
+                        user ?
+                            <ReservedTickets
+                                id={id}
+                                seats={seats}
+                                user_id={user.user_id}
+                                totalPrice={totalPrice}
+                            /> : null
+                    }
                 </GridItem>
             </Grid>
             <Spacer mt='80px'></Spacer>

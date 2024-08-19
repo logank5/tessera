@@ -20,7 +20,7 @@ function ReservedRow({ id }) {
         <Card
             direction={{ base: 'column', sm: 'row' }}
             variant='outline'
-            m='15px'
+            m='10px'
 
         >
 
