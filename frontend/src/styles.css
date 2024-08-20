@@ -2,6 +2,7 @@
     background-color: darkblue;
     width: 50%;
     text-align: center;
+    align-items: center;
     padding: 10px;
     border-radius: 10px;
 }
