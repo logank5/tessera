@@ -535,12 +535,16 @@ def delete_user():
     cursor.execute('SELECT password_hash FROM Users WHERE username = ?', (username,))
     hashed_password = cursor.fetchone()
 
+    cursor.execute('SELECT user_id FROM Users WHERE username = ?', (username,))
+    id = cursor.fetchone()
 
     if user != None:
       if check_password_hash(hashed_password['password_hash'], password):
-        # Attempt to insert the new user into the Users table
+        cursor.execute('UPDATE Tickets SET status = ?, user_id = ?, purchase_date = ? WHERE user_id = ?', ('AVAILABLE', None, None, id[0],))
+
         cursor.execute('DELETE FROM Users WHERE username = ?', (username,))
         conn.commit()  # Commit the changes to the database
+
         return jsonify({'message': 'User Successfully Deleted'}), 200
       else:
           return jsonify({'message': 'User not deleted: Incorrect Password'}), 400
