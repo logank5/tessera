@@ -18,11 +18,6 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
 
@@ -39,8 +34,6 @@
   </a>
 
   <p align="center">
-    <br />
-    <br />
     <br />
     <a href="">View Website</a>
   </p>
@@ -92,18 +85,37 @@ Designed the architecture of a web application simulating a live ticketing servi
 
 
 
-### Built With
+## Built With
 
 This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 
-* [![React][React.js]][React-url]
-* [![Python][Python.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
-* [![Svelte][Svelte.dev]][Svelte-url]
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
+> Database:
+- Languages:
+  - SQLite
+- Technologies:
+  - DB Browser
+
+> Back-End
+- Languages:
+  - Python
+  - SQL
+- Technologies:
+  - Flask
+  - Cors
+  - JWT
+  - Postman
+  - Stripe
+  - Gmail Integration
+
+
+> Front-End
+- Languages:
+  - JavaScript
+  - CSS
+- Technologies:
+  - Chakra
+  - React
+  - Vite
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
