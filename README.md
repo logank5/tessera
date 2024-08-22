@@ -84,38 +84,20 @@ Designed the architecture of a web application simulating a live ticketing servi
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-
 ## Built With
-
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
-
-> Database:
-- Languages:
-  - SQLite
-- Technologies:
-  - DB Browser
-
-> Back-End
-- Languages:
-  - Python
-  - SQL
-- Technologies:
-  - Flask
-  - Cors
-  - JWT
-  - Postman
-  - Stripe
-  - Gmail Integration
-
-
-> Front-End
-- Languages:
-  - JavaScript
-  - CSS
-- Technologies:
-  - Chakra
-  - React
-  - Vite
+### Languages
+* [![JavaScript][JavaScript.js]][JavaScript-url]
+* [![React][React.js]][React-url]
+* [![Chakra UI][Chakra.com]][Chakra-url]
+* [![Python][Python.com]][Python-url]
+* ![CSS][CSS.com]
+### Tools Used
+* [![Vite][Vite.com]][Vite-url]
+* [![Flask][Flask.com]][Flask-url]
+* [![Postman][Postman.com]][Postman-url]
+* [![SQLite][SQLite.com]][SQLite-url]
+* [![Stripe][Stripe.com]][Stripe-url]
+* [![JWT][JWT.com]][JWT-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -161,74 +143,12 @@ _Below is an example of how you can instruct your audience on installing and set
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- ROADMAP -->
-## Roadmap
-
-- [x] Add Changelog
-- [x] Add back to top links
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add "components" document to easily copy & paste sections of the readme
-- [ ] Multi-language Support
-    - [ ] Chinese
-    - [ ] Spanish
-
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- CONTRIBUTING -->
-## Contributing
-
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-### Top contributors:
-
-<a href="https://github.com/othneildrew/Best-README-Template/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=othneildrew/Best-README-Template" alt="contrib.rocks image" />
-</a>
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
+Logan Kemprowski - [@logan-kemprowski](https://www.linkedin.com/in/logan-kemprowski/)
 
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
+Project Link: [https://github.com/logank5/tessera](https://github.com/logank5/tessera)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -285,3 +205,26 @@ Use this space to list resources you find helpful and would like to give credit 
 [Bootstrap-url]: https://getbootstrap.com
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
 [JQuery-url]: https://jquery.com 
+
+[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React-url]: https://reactjs.org/
+[Python.com]: https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue
+[Python-url]: https://www.python.org/
+[JavaScript.js]: https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E
+[JavaScript-url]: https://www.javascript.com/
+[Chakra.com]: https://img.shields.io/badge/Chakra--UI-319795?style=for-the-badge&logo=chakra-ui&logoColor=white
+[Chakra-url]: https://v2.chakra-ui.com/
+[CSS.com]: https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white
+[Vite.com]: https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E
+[Vite-url]: https://vitejs.dev/
+[Flask.com]: https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white
+[Flask-url]: https://flask.palletsprojects.com/en/3.0.x/
+[Postman.com]: https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=Postman&logoColor=white
+[Postman-url]: https://www.postman.com/
+[SQLite.com]: https://img.shields.io/badge/Sqlite-003B57?style=for-the-badge&logo=sqlite&logoColor=white
+[SQLite-url]: https://www.sqlite.org/
+[Stripe.com]: https://img.shields.io/badge/Stripe-626CD9?style=for-the-badge&logo=Stripe&logoColor=white
+[Stripe-url]: https://stripe.com/
+[JWT.com]: https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white
+[JWT-url]: https://jwt.io/
+
